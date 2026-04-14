@@ -3,7 +3,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public enum Currency {
-    USD(2,RoundingMode.HALF_UP),
+    USD(2,RoundingMode.HALF_UP),//here to avoid hardcoding round() method for decimalPlaces and roundingMode i assigned it to each enum value
     EUR(2,RoundingMode.HALF_UP),
     IQD(0,RoundingMode.UP);
     private final int decimalPlaces;
@@ -13,7 +13,7 @@ public enum Currency {
         this.roundingMode=roundingMode;
     }
     public BigDecimal round(BigDecimal amount){
-        return amount.setScale(decimalPlaces, roundingMode);//setScale is a rounding ready class using RoundingMode
+        return amount.setScale(decimalPlaces, roundingMode);//setScale is a rounding ready method in the RoundingMode import
     }
     public int getDecimalPlaces() {
         return decimalPlaces;
