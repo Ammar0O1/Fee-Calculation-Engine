@@ -21,6 +21,6 @@ public class CurrencyPair {
         return Objects.equals(this.sourceCurrency, sourceCurrency) && this.destinationCurrency==null;
     }
     public boolean isWildcard(){
-        return this.sourceCurrency==null && this.destinationCurrency==null;
+        return Objects.isNull(this.sourceCurrency) && Objects.isNull(this.destinationCurrency);
     }
 }
