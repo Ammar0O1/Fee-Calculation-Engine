@@ -1,0 +1,371 @@
+' ============================================================
+' FEE CALCULATION ENGINE - ARCHITECTURE DIAGRAMS
+' ============================================================
+' This file contains 3 diagrams. Open in IntelliJ with the
+' PlantUML Integration plugin to flip between pages, OR
+' render each @startuml block separately.
+'
+' Page 1: Architectural layers (component diagram)
+' Page 2: Class structure (class diagram)
+' Page 3: Calculation sequence (sequence diagram)
+' ============================================================
+
+
+' ============================================================
+' PAGE 1 - ARCHITECTURAL LAYERS
+' ============================================================
+@startuml 01-layers
+title Fee Engine - Architectural Layers
+
+skinparam componentStyle rectangle
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam roundCorner 10
+
+package "API Layer (Assignment 3)" #FCEBEB {
+  [REST Controllers]
+  [Request / Response DTOs]
+  [Bean Validation]
+  [Global Error Handler]
+  note right of [REST Controllers]
+    Knows: HTTP, JSON, status codes
+    Does NOT know: how fees are computed
+  end note
+}
+
+package "Application Layer (Assignment 1)" #EEEDFE {
+  [FeeCalculator] as Calc
+  [FeeRuleResolver] as Resolver
+  note right of Calc
+    Orchestrator. ~30 lines.
+    Owns no data.
+  end note
+}
+
+package "Domain Core (Assignment 1)" #E1F5EE {
+  [FeeRule]
+  [FeeSideDefinition]
+  [TierBracket]
+  [Transaction]
+  [FeeCalculationResult]
+  [FeeApplier]
+  [Strategies x5]
+  interface "FeeRuleRegistry" as Registry
+  interface "FeeTransactionLogger" as Logger
+  note bottom of Registry
+    Interface lives in DOMAIN.
+    Implementation lives in INFRASTRUCTURE.
+    This is dependency inversion.
+  end note
+}
+
+package "Infrastructure: Storage" #FAECE7 {
+  [InMemoryFeeRuleRegistry\n(Assignment 1)] as InMem
+  [JpaFeeRuleRegistry\n(Assignment 2)] as Jpa
+  [JSON loader] as Json
+}
+
+package "Infrastructure: Logging" #FAECE7 {
+  [NoOpLogger\n(Assignment 1)] as NoOp
+  [JpaTransactionLogger\n(Assignment 2)] as JpaLog
+}
+
+[REST Controllers] --> Calc
+Calc --> Resolver
+Calc --> [FeeApplier]
+Calc --> [Strategies x5]
+Resolver --> Registry
+Calc ..> Logger
+
+InMem ..|> Registry
+Jpa ..|> Registry
+NoOp ..|> Logger
+JpaLog ..|> Logger
+
+Json --> InMem
+
+note as N1
+  Dependency rule:
+  Arrows only point DOWN (or sideways within a layer).
+  Domain core never imports from API or Infrastructure.
+  If you ever write `import javax.persistence.*` in the
+  domain package, you have broken the architecture.
+end note
+
+@enduml
+
+
+' ============================================================
+' PAGE 2 - CLASS STRUCTURE
+' ============================================================
+@startuml 02-classes
+title Fee Engine - Class Structure (Assignment 1)
+
+skinparam classFontName Arial
+skinparam shadowing false
+skinparam roundCorner 8
+hide empty members
+
+' ===== ENUMS =====
+enum Currency {
+  IQD
+  USD
+  EUR
+  --
+  -decimalPlaces : int
+  -roundingMode : RoundingMode
+  +round(BigDecimal) : BigDecimal
+}
+
+enum UserType {
+  PERSONAL
+  BUSINESS
+  CORPORATE
+  BUSINESS_TERMINAL
+  CORPORATE_TERMINAL
+}
+
+enum TransactionType {
+  WIRE_TRANSFER
+  INTERNAL_TRANSFER
+  CASH_WITHDRAWAL
+  PAYMENT
+  ...
+}
+
+enum CalculationMode {
+  FLAT
+  PERCENTAGE
+  HYBRID
+  TIERED_FLAT
+  TIERED_MARGINAL
+}
+
+' ===== VALUE OBJECTS =====
+class TierBracket <<value object>> {
+  -fromAmount : BigDecimal
+  -toAmount : BigDecimal
+  -rate : BigDecimal
+  +TierBracket(from, to, rate)
+}
+
+class CurrencyPair <<value object>> {
+  -sourceCurrency : Currency
+  -destinationCurrency : Currency
+  +isExactMatch(src, dst) : boolean
+  +isPartialSourceMatch(src) : boolean
+  +isPartialDestinationMatch(dst) : boolean
+  +isWildcard() : boolean
+}
+
+' ===== CONFIGURATION =====
+class FeeSideDefinition {
+  -calculationMode : CalculationMode
+  -flatAmount : BigDecimal
+  -percentage : BigDecimal
+  -tiers : List<TierBracket>
+  -minCap : BigDecimal
+  -maxCap : BigDecimal
+  +validate()
+}
+
+class FeeRule {
+  -ruleId : String
+  -userId : String
+  -userType : UserType
+  -transactionType : TransactionType
+  -sourceCurrency : Currency
+  -destinationCurrency : Currency
+  -senderFee : FeeSideDefinition
+  -receiverFee : FeeSideDefinition
+  -effectiveDate : LocalDateTime
+  -active : boolean
+}
+
+' ===== INPUT / OUTPUT =====
+class Transaction {
+  -transactionId : String
+  -amount : BigDecimal
+  -sourceCurrency : Currency
+  -destinationCurrency : Currency
+  -transactionType : TransactionType
+  -senderId : String
+  -senderUserType : UserType
+  -receiverId : String
+  -receiverUserType : UserType
+}
+
+class FeeSideResult {
+  -matchedRuleId : String
+  -matchLevel : String
+  -currency : Currency
+  -rawFee : BigDecimal
+  -roundedFee : BigDecimal
+  -capApplied : String
+  -finalFee : BigDecimal
+  -waived : boolean
+}
+
+class FeeCalculationResult {
+  -transactionId : String
+  -senderResult : FeeSideResult
+  -receiverResult : FeeSideResult
+  -calculatedAt : LocalDateTime
+}
+
+' ===== STRATEGIES =====
+interface FeeCalculationStrategy {
+  +calculate(amount, def) : BigDecimal
+}
+
+class FlatFeeStrategy
+class PercentageFeeStrategy
+class HybridFeeStrategy
+class FlatTierFeeStrategy
+class MarginalTierFeeStrategy
+
+class CalculationStrategyFactory {
+  +forMode(CalculationMode) : FeeCalculationStrategy
+}
+
+' ===== APPLICATION =====
+class FeeApplier {
+  +apply(rawFee, def, currency) : FeeSideResult
+}
+
+interface FeeRuleRegistry {
+  +findAllActive() : List<FeeRule>
+  +findByUserId(String) : List<FeeRule>
+  +add(FeeRule)
+}
+
+class InMemoryFeeRuleRegistry
+
+class FeeRuleResolver {
+  -registry : FeeRuleRegistry
+  +resolve(userId, userType, txType, src, dst) : FeeRule
+}
+
+class FeeCalculator {
+  -resolver : FeeRuleResolver
+  -applier : FeeApplier
+  -factory : CalculationStrategyFactory
+  +calculate(Transaction) : FeeCalculationResult
+}
+
+' ===== RELATIONSHIPS =====
+FeeRule "1" *-- "0..1" FeeSideDefinition : senderFee
+FeeRule "1" *-- "0..1" FeeSideDefinition : receiverFee
+FeeRule --> UserType
+FeeRule --> TransactionType
+FeeRule --> Currency : source / dest
+
+FeeSideDefinition --> CalculationMode
+FeeSideDefinition "1" *-- "0..*" TierBracket
+
+Transaction --> Currency
+Transaction --> UserType
+Transaction --> TransactionType
+
+FeeCalculationResult "1" *-- "2" FeeSideResult
+FeeSideResult --> Currency
+
+FlatFeeStrategy ..|> FeeCalculationStrategy
+PercentageFeeStrategy ..|> FeeCalculationStrategy
+HybridFeeStrategy ..|> FeeCalculationStrategy
+FlatTierFeeStrategy ..|> FeeCalculationStrategy
+MarginalTierFeeStrategy ..|> FeeCalculationStrategy
+
+CalculationStrategyFactory --> FeeCalculationStrategy : returns
+
+InMemoryFeeRuleRegistry ..|> FeeRuleRegistry
+FeeRuleResolver --> FeeRuleRegistry
+FeeRuleResolver --> FeeRule : returns
+
+FeeCalculator --> FeeRuleResolver
+FeeCalculator --> FeeApplier
+FeeCalculator --> CalculationStrategyFactory
+FeeCalculator --> Transaction : input
+FeeCalculator --> FeeCalculationResult : output
+
+@enduml
+
+
+' ============================================================
+' PAGE 3 - CALCULATION SEQUENCE
+' ============================================================
+@startuml 03-sequence
+title Fee Engine - One Calculation Call
+
+skinparam shadowing false
+skinparam sequenceMessageAlign center
+skinparam defaultFontName Arial
+
+actor Caller
+participant "FeeCalculator" as Calc
+participant "FeeRuleResolver" as Resolver
+participant "FeeRuleRegistry" as Registry
+participant "StrategyFactory" as Factory
+participant "FeeCalculationStrategy" as Strategy
+participant "FeeApplier" as Applier
+
+Caller -> Calc : calculate(transaction)
+activate Calc
+
+Calc -> Calc : validate(transaction)
+note right: amount > 0\nno null fields\nthrow early
+
+== Sender side ==
+
+Calc -> Resolver : resolve(senderId, senderType,\ntxType, src, dst)
+activate Resolver
+Resolver -> Registry : findAllActive()
+Registry --> Resolver : List<FeeRule>
+Resolver -> Resolver : filter candidates\nscore by specificity\npick highest
+Resolver --> Calc : senderRule
+deactivate Resolver
+
+Calc -> Calc : extract senderFee definition
+
+alt senderFee == null
+  Calc -> Calc : mark sender waived
+else senderFee != null
+  Calc -> Factory : forMode(senderFee.mode)
+  Factory --> Calc : strategy
+  Calc -> Strategy : calculate(amount, senderFee)
+  Strategy --> Calc : rawFee
+  Calc -> Applier : apply(rawFee, senderFee, sourceCurrency)
+  note right: round using source currency\nthen apply minCap then maxCap
+  Applier --> Calc : senderResult
+end
+
+== Receiver side ==
+
+Calc -> Resolver : resolve(receiverId, receiverType,\ntxType, src, dst)
+activate Resolver
+Resolver -> Registry : findAllActive()
+Registry --> Resolver : List<FeeRule>
+Resolver --> Calc : receiverRule
+deactivate Resolver
+
+Calc -> Calc : extract receiverFee definition
+
+alt receiverFee == null
+  Calc -> Calc : mark receiver waived
+else receiverFee != null
+  Calc -> Factory : forMode(receiverFee.mode)
+  Factory --> Calc : strategy
+  Calc -> Strategy : calculate(amount, receiverFee)
+  Strategy --> Calc : rawFee
+  Calc -> Applier : apply(rawFee, receiverFee, destinationCurrency)
+  note right: round using DESTINATION currency
+  Applier --> Calc : receiverResult
+end
+
+== Result ==
+
+Calc -> Calc : assemble FeeCalculationResult
+Calc --> Caller : result
+deactivate Calc
+
+@enduml
