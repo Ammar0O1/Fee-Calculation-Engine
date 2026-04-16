@@ -1,6 +1,6 @@
-package com.yourproject.fee.domain.calculation;
+package com.gateway.fee.domain.calculation;
 
-import com.yourproject.fee.domain.model.FeeSideDefinition;
+import com.gateway.fee.domain.model.FeeSideDefinition;
 import java.math.BigDecimal;
 
 public interface FeeCalculationStrategy {

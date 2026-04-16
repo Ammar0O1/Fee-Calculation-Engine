@@ -1,4 +1,4 @@
-package com.yourproject.fee.domain.model;
+package com.gateway.fee.domain.model;
 
 import lombok.Getter;
 import java.math.BigDecimal;
