@@ -1,4 +1,4 @@
-package com.yourproject.fee.domain.model;
+package com.gateway.fee.domain.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,8 @@ public class CurrencyPair {
     private final Currency sourceCurrency;
     private final Currency destinationCurrency;
 
+    // this.sourceCurrency = the currency stored in this pair (the field)
+    // sourceCurrency      = the currency passed into the method (the parameter)
     public boolean isExactMatch(Currency sourceCurrency,Currency destinationCurrency){
         return Objects.equals(this.sourceCurrency,sourceCurrency) && Objects.equals(this.destinationCurrency,destinationCurrency);
     }

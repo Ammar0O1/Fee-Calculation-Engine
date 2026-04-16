@@ -1,4 +1,4 @@
-package com.yourproject.fee.domain.model;
+package com.gateway.fee.domain.model;
 
 import io.vavr.collection.List;
 import lombok.Getter;
