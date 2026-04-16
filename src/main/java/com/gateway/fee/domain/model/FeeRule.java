@@ -3,7 +3,6 @@ package com.gateway.fee.domain.model;
 import lombok.Getter;
 import java.time.LocalDateTime;
 
-//Stores the rules missing method checking for when 2 rules must not exist if they have the same id same everything must be check in FeeRuleRegistry
 @Getter
 public class FeeRule {
     private final String ruleId;
@@ -28,6 +27,9 @@ public class FeeRule {
     }
     if(ruleId == null){
         throw new IllegalArgumentException("Rule id must not be null");
+    }
+    if (effectiveDate == null) {
+        throw new IllegalArgumentException("Effective date must not be null");
     }
         this.ruleId = ruleId;
         this.userId = userId;
