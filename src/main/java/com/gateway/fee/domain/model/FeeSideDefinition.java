@@ -39,6 +39,27 @@ public class FeeSideDefinition {
                 if(tiers == null || tiers.isEmpty()){
                     throw new IllegalArgumentException("tiers must not be null");
                 }
+                // making sure brackets start at 0
+                if (tiers.get(0).getFromAmount().compareTo(BigDecimal.ZERO) != 0) {
+                    throw new IllegalArgumentException("First tier bracket must start at 0");
+                }
+                // only last bracket can have null toAmount
+                for (int i = 0; i < tiers.size() - 1; i++) {
+                    TierBracket tier = tiers.get(i);
+                    if (tier.getToAmount() == null) {
+                        throw new IllegalArgumentException("Only the last bracket may have null toAmount");
+                    }
+                }
+                // brackets need to be sorted
+                for (int i = 1; i < tiers.size(); i++) {
+                    TierBracket previous = tiers.get(i - 1);
+                    TierBracket current = tiers.get(i);
+
+                    if(current.getFromAmount().compareTo(previous.getToAmount()) != 0){
+                        throw new IllegalArgumentException("the bracket are not sorted in order");
+                    }
+                }
+
             }
         }//checks first if minCap,maxCap are present or not then compares it
         if (minCap != null &&  maxCap != null) {
