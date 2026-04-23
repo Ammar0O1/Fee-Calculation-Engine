@@ -1,12 +1,10 @@
 package com.gateway.fee.domain.model;
-
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
-
 import java.math.BigDecimal;
 
 public final class  FeeResultAssertions {
-
+//Ammar dugma agar naxinyawa ya3ni review nakrdya
     private FeeResultAssertions() {}
 
     public static FeeCalculationResultAssert assertThat(FeeCalculationResult result) {
