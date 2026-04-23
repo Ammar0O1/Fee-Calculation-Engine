@@ -11,7 +11,7 @@ public class MarginalTierFeeStrategy implements FeeCalculationStrategy {
     @Override
     public BigDecimal calculate(BigDecimal amount, FeeSideDefinition fee) {
         BigDecimal total = BigDecimal.ZERO;
-
+//TO DO: Change for loop to a better approach.
         for (int i = 0; i < fee.getTiers().size(); i++) {
             TierBracket bracket = fee.getTiers().get(i);
             // added those 3 only for better readability
