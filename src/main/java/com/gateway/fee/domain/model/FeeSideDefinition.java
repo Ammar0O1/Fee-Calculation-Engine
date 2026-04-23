@@ -43,6 +43,7 @@ public class FeeSideDefinition {
                 if (tiers.get(0).getFromAmount().compareTo(BigDecimal.ZERO) != 0) {
                     throw new IllegalArgumentException("First tier bracket must start at 0");
                 }
+                //TO DO: change for to a better approach.
                 // only last bracket can have null toAmount
                 for (int i = 0; i < tiers.size() - 1; i++) {
                     TierBracket tier = tiers.get(i);
@@ -59,7 +60,6 @@ public class FeeSideDefinition {
                         throw new IllegalArgumentException("the bracket are not sorted in order");
                     }
                 }
-
             }
         }//checks first if minCap,maxCap are present or not then compares it
         if (minCap != null &&  maxCap != null) {
