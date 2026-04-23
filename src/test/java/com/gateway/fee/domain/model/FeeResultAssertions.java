@@ -5,7 +5,7 @@ import org.assertj.core.api.Assertions;
 
 import java.math.BigDecimal;
 
-public final class FeeResultAssertions {
+public final class  FeeResultAssertions {
 
     private FeeResultAssertions() {}
 
