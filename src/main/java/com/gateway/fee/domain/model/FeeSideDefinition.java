@@ -45,13 +45,17 @@ public class FeeSideDefinition {
                 }
                 //TO DO: change for to a better approach.
                 // only last bracket can have null toAmount
-                for (int i = 0; i < tiers.size() - 1; i++) {
-                    TierBracket tier = tiers.get(i);
-                    if (tier.getToAmount() == null) {
-                        throw new IllegalArgumentException("Only the last bracket may have null toAmount");
-                    }
+                if(tiers.init().filter(bracket -> bracket.getToAmount() == null).nonEmpty()){
+                    throw new IllegalArgumentException("Only the last bracket may have null toAmount");
                 }
+//                for (int i = 0; i < tiers.size() - 1; i++) {
+//                    TierBracket tier = tiers.get(i);
+//                    if (tier.getToAmount() == null) {
+//                        throw new IllegalArgumentException("Only the last bracket may have null toAmount");
+//                    }
+//                }
                 // brackets need to be sorted
+
                 for (int i = 1; i < tiers.size(); i++) {
                     TierBracket previous = tiers.get(i - 1);
                     TierBracket current = tiers.get(i);

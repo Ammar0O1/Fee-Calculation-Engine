@@ -88,11 +88,11 @@ public class BuildersTest {
                 .withDestinationCurrency(Currency.EUR)
                 .build();
 
-        assertThat(tx.getUserId()).isEqualTo("u-1");
-        assertThat(tx.getUserType()).isEqualTo(UserType.CORPORATE);
+        assertThat(tx.getSenderId()).isEqualTo("u-1");
+        assertThat(tx.getSenderUserType()).isEqualTo(UserType.CORPORATE);
         assertThat(tx.getTransactionType()).isEqualTo(WIRE_TRANSFER);
         assertThat(tx.getAmount()).isEqualByComparingTo("123.45");
-        assertThat(tx.getCurrency()).isEqualTo(Currency.USD);
+        assertThat(tx.getSourceCurrency()).isEqualTo(Currency.USD);
         assertThat(tx.getDestinationCurrency()).isEqualTo(Currency.EUR);
     }
 }

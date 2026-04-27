@@ -7,7 +7,6 @@ import com.gateway.fee.domain.model.*;
 import com.gateway.fee.domain.resolution.FeeRuleResolver;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -123,7 +122,6 @@ public class FeeCalculator {
                 false
         );
     }
-
     // Builds a result for a waived fee side, only 4 parameters because the rest are constant for any waived transaction
     private FeeSideResult buildWaivedResult(String userId, UserType userType, String matchedRuleId, Currency currency) {
         return new FeeSideResult(
@@ -139,8 +137,6 @@ public class FeeCalculator {
                 BigDecimal.ZERO,
                 null,
                 true
-
-
         );
     }
 }

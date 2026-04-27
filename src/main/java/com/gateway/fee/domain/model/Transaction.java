@@ -1,10 +1,13 @@
 package com.gateway.fee.domain.model;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
+@Builder
 public class Transaction {
     private final String transactionId;
     private final BigDecimal amount;
@@ -15,8 +18,9 @@ public class Transaction {
     private final UserType senderUserType;
     private final String receiverId;
     private final UserType receiverUserType;
+    private final LocalDateTime timestamp;
 
-    public Transaction(String transactionId, BigDecimal amount, Currency sourceCurrency, Currency destinationCurrency, TransactionType transactionType, String senderId, UserType senderUserType, String receiverId, UserType receiverUserType) {
+    public Transaction(String transactionId, BigDecimal amount, Currency sourceCurrency, Currency destinationCurrency, TransactionType transactionType, String senderId, UserType senderUserType, String receiverId, UserType receiverUserType, LocalDateTime timestamp) {
         this.transactionId = Objects.requireNonNull(transactionId, "transactionId is required");
         if (this.transactionId.isBlank()) {// using isBlank instad of isEmpty to also catch strings that are just spaces "   "
             throw new IllegalArgumentException("transactionId must not be empty");
@@ -34,5 +38,6 @@ public class Transaction {
         this.senderUserType = Objects.requireNonNull(senderUserType, "senderUserType is required");
         this.receiverId = Objects.requireNonNull(receiverId, "receiverId is required");
         this.receiverUserType = Objects.requireNonNull(receiverUserType, "receiverUserType is required");
+        this.timestamp = timestamp != null ? timestamp : LocalDateTime.now();
     }
 }
