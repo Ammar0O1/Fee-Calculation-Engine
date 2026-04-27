@@ -72,11 +72,13 @@ public class TransactionBuilder {
         }
         return Transaction.builder()
                 .transactionId(transactionId)
-                .userId(userId)
-                .userType(userType)
+                .senderId(userId)
+                .senderUserType(userType)
+                .receiverId("receiver-1") // Default or allow configuration
+                .receiverUserType(UserType.PERSONAL)
                 .transactionType(transactionType)
                 .amount(amount)
-                .currency(currency)
+                .sourceCurrency(currency)
                 .destinationCurrency(destinationCurrency)
                 .timestamp(timestamp)
                 .build();
