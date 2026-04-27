@@ -61,15 +61,13 @@ public class FeeRuleResolver {
         }
         if (pair.isPartialSourceMatch(sourceCurrency)) {
             return 3;
-        }        if (pair.isPartialDestinationMatch(destinationCurrency)) {
+        }
+        if (pair.isPartialDestinationMatch(destinationCurrency)) {
             return 2;
         }
         if (pair.isWildcard()) {
             return 1;
         }
-
-
         return 0;
-
     }
 }
