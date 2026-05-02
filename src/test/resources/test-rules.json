@@ -1,0 +1,318 @@
+[
+  {
+    "ruleId": "rule-default",
+    "userId": null,
+    "userType": null,
+    "transactionType": null,
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Global default rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "FLAT",
+      "flatAmount": 1.00,
+      "percentage": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  }
+,
+  {
+    "ruleId": "rule-001",
+    "userId": null,
+    "userType": "CORPORATE",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Corporate wire transfer rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "percentage": 0.005,
+      "flatAmount": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-002",
+    "userId": null,
+    "userType": "PERSONAL",
+    "transactionType": "INTERNAL_TRANSFER",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Personal internal transfer rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "FLAT",
+      "flatAmount": 1.00,
+      "percentage": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-003",
+    "userId": null,
+    "userType": "BUSINESS",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Business wire transfer rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "flatAmount": null,
+      "percentage": 0.01,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-004",
+    "userId": null,
+    "userType": "PERSONAL",
+    "transactionType": "PAYMENT",
+    "sourceCurrency": "USD",
+    "destinationCurrency": "IQD",
+    "active": true,
+    "description": "Personal USD to IQD payment rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "HYBRID",
+      "flatAmount": 2.00,
+      "percentage": 0.005,
+      "tiers": null,
+      "minCap": 3.00,
+      "maxCap": 20.00
+    },
+    "receiverFee": {
+      "calculationMode": "FLAT",
+      "flatAmount": 500,
+      "percentage": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    }
+  },
+  {
+    "ruleId": "rule-005",
+    "userId": "user-123",
+    "userType": "CORPORATE",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "User specific corporate wire transfer rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "flatAmount": null,
+      "percentage": 0.002,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-006",
+    "userId": null,
+    "userType": "BUSINESS_TERMINAL",
+    "transactionType": "PAYMENT",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Business terminal payment with marginal tiers",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "TIERED_MARGINAL",
+      "flatAmount": null,
+      "percentage": null,
+      "tiers": [
+        {"fromAmount": 0, "toAmount": 1000, "rate": 0.02},
+        {"fromAmount": 1000, "toAmount": 5000, "rate": 0.015},
+        {"fromAmount": 5000, "toAmount": null, "rate": 0.01}
+      ],
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-007",
+    "userId": null,
+    "userType": "PERSONAL",
+    "transactionType": "PAYMENT",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Personal payment with flat tiered fees",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "TIERED_FLAT",
+      "flatAmount": null,
+      "percentage": null,
+      "tiers": [
+        {"fromAmount": 0, "toAmount": 500, "rate": 0.01},
+        {"fromAmount": 500, "toAmount": 1000, "rate": 0.008},
+        {"fromAmount": 1000, "toAmount": null, "rate": 0.006}
+      ],
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-008",
+    "userId": null,
+    "userType": "CORPORATE",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": "USD",
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Partial source currency match - USD to any destination",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "flatAmount": null,
+      "percentage": 0.003,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-009",
+    "userId": null,
+    "userType": "BUSINESS",
+    "transactionType": "PAYMENT",
+    "sourceCurrency": null,
+    "destinationCurrency": "EUR",
+    "active": true,
+    "description": "Partial destination currency match - any source to EUR",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "FLAT",
+      "flatAmount": 5.00,
+      "percentage": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-010",
+    "userId": null,
+    "userType": "PERSONAL",
+    "transactionType": "PAYMENT",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Rule with only maxCap (no minCap)",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "HYBRID",
+      "flatAmount": 1.50,
+      "percentage": 0.01,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": 50.00
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-011",
+    "userId": null,
+    "userType": "BUSINESS",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": "USD",
+    "destinationCurrency": "IQD",
+    "active": true,
+    "description": "Rule with only minCap (no maxCap)",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "flatAmount": null,
+      "percentage": 0.008,
+      "tiers": null,
+      "minCap": 10.00,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-012",
+    "userId": null,
+    "userType": "CORPORATE_TERMINAL",
+    "transactionType": "PAYMENT",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Corporate terminal user type rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "flatAmount": null,
+      "percentage": 0.006,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-013",
+    "userId": "user-456",
+    "userType": "CORPORATE",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Second user-specific corporate wire transfer rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "FLAT",
+      "flatAmount": 7.50,
+      "percentage": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "rule-014",
+    "userId": null,
+    "userType": "PERSONAL",
+    "transactionType": "PAYMENT",
+    "sourceCurrency": "USD",
+    "destinationCurrency": "EUR",
+    "active": false,
+    "description": "Inactive rule - should be ignored during resolution",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "flatAmount": null,
+      "percentage": 0.05,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  }
+]
