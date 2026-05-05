@@ -32,20 +32,14 @@ public class FeeCalculatorIntegrationTest {
         calculator = new FeeCalculator(resolver, factory, applier);
     }
 
-    private FeeCalculationResult runTransaction(String txId, BigDecimal amount,
-                                                Currency src, Currency dst, TransactionType txType,
-                                                String senderId, UserType senderType,
-                                                String receiverId, UserType receiverType) {
-        Transaction tx = new Transaction(txId, amount, src, dst, txType,
-                senderId, senderType, receiverId, receiverType, LocalDateTime.now());
+    private FeeCalculationResult runTransaction(String txId, BigDecimal amount, Currency src, Currency dst, TransactionType txType, String senderId, UserType senderType, String receiverId, UserType receiverType) {
+        Transaction tx = new Transaction(txId, amount, src, dst, txType, senderId, senderType, receiverId, receiverType, LocalDateTime.now());
         return calculator.calculate(tx);
     }
 
     @Test
     public void shouldCalculateCorporateWireTransferFee() {
-        FeeCalculationResult result = runTransaction("tx-1", new BigDecimal("10000"),
-                Currency.EUR, Currency.IQD, TransactionType.WIRE_TRANSFER,
-                "corp-sender", UserType.CORPORATE, "receiver", UserType.PERSONAL);
+        FeeCalculationResult result = runTransaction("tx-1", new BigDecimal("10000"), Currency.EUR, Currency.IQD, TransactionType.WIRE_TRANSFER, "corp-sender", UserType.CORPORATE, "receiver", UserType.PERSONAL);
 
         assertThat(result.getSenderResult().getFinalFee()).isEqualByComparingTo(new BigDecimal("50.00"));
         assertThat(result.getSenderResult().isWaived()).isFalse();
@@ -55,9 +49,7 @@ public class FeeCalculatorIntegrationTest {
 
     @Test
     public void shouldMatchUserSpecificRuleForUser123() {
-        FeeCalculationResult result = runTransaction("tx-2", new BigDecimal("10000"),
-                Currency.EUR, Currency.IQD, TransactionType.WIRE_TRANSFER,
-                "user-123", UserType.CORPORATE, "receiver", UserType.PERSONAL);
+        FeeCalculationResult result = runTransaction("tx-2", new BigDecimal("10000"), Currency.EUR, Currency.IQD, TransactionType.WIRE_TRANSFER, "user-123", UserType.CORPORATE, "receiver", UserType.PERSONAL);
 
         assertThat(result.getSenderResult().getFinalFee()).isEqualByComparingTo(new BigDecimal("20.00"));
         assertThat(result.getSenderResult().isWaived()).isFalse();
@@ -65,9 +57,7 @@ public class FeeCalculatorIntegrationTest {
 
     @Test
     public void shouldFallbackToGlobalDefault() {
-        FeeCalculationResult result = runTransaction("tx-3", new BigDecimal("500"),
-                Currency.EUR, Currency.EUR, TransactionType.INTERNAL_TRANSFER,
-                "some-sender", UserType.CORPORATE_TERMINAL, "some-receiver", UserType.CORPORATE_TERMINAL);
+        FeeCalculationResult result = runTransaction("tx-3", new BigDecimal("500"), Currency.EUR, Currency.EUR, TransactionType.INTERNAL_TRANSFER, "some-sender", UserType.CORPORATE_TERMINAL, "some-receiver", UserType.CORPORATE_TERMINAL);
 
         assertThat(result.getSenderResult().getFinalFee()).isEqualByComparingTo(new BigDecimal("1.00"));
         assertThat(result.getSenderResult().isWaived()).isFalse();
@@ -76,9 +66,7 @@ public class FeeCalculatorIntegrationTest {
 
     @Test
     public void shouldApplyMinCapForHybridFee() {
-        FeeCalculationResult result = runTransaction("tx-4a", new BigDecimal("100"),
-                Currency.USD, Currency.IQD, TransactionType.PAYMENT,
-                "personal-sender", UserType.PERSONAL, "receiver", UserType.PERSONAL);
+        FeeCalculationResult result = runTransaction("tx-4a", new BigDecimal("100"), Currency.USD, Currency.IQD, TransactionType.PAYMENT, "personal-sender", UserType.PERSONAL, "receiver", UserType.PERSONAL);
 
         assertThat(result.getSenderResult().getFinalFee()).isEqualByComparingTo(new BigDecimal("3.00"));
         assertThat(result.getSenderResult().getCapApplied()).isEqualTo("MIN_CAP_APPLIED");
@@ -86,9 +74,7 @@ public class FeeCalculatorIntegrationTest {
 
     @Test
     public void shouldApplyMaxCapForHybridFee() {
-        FeeCalculationResult result = runTransaction("tx-4b", new BigDecimal("5000"),
-                Currency.USD, Currency.IQD, TransactionType.PAYMENT,
-                "personal-sender", UserType.PERSONAL, "receiver", UserType.PERSONAL);
+        FeeCalculationResult result = runTransaction("tx-4b", new BigDecimal("5000"), Currency.USD, Currency.IQD, TransactionType.PAYMENT, "personal-sender", UserType.PERSONAL, "receiver", UserType.PERSONAL);
 
         assertThat(result.getSenderResult().getFinalFee()).isEqualByComparingTo(new BigDecimal("20.00"));
         assertThat(result.getSenderResult().getCapApplied()).isEqualTo("MAX_CAP_APPLIED");
@@ -96,9 +82,7 @@ public class FeeCalculatorIntegrationTest {
 
     @Test
     public void shouldCalculateMarginalTieredFee() {
-        FeeCalculationResult result = runTransaction("tx-5", new BigDecimal("8000"),
-                Currency.USD, Currency.USD, TransactionType.PAYMENT,
-                "terminal-sender", UserType.BUSINESS_TERMINAL, "receiver", UserType.PERSONAL);
+        FeeCalculationResult result = runTransaction("tx-5", new BigDecimal("8000"), Currency.USD, Currency.USD, TransactionType.PAYMENT, "terminal-sender", UserType.BUSINESS_TERMINAL, "receiver", UserType.PERSONAL);
 
         assertThat(result.getSenderResult().getFinalFee()).isEqualByComparingTo(new BigDecimal("110.00"));
         assertThat(result.getSenderResult().isWaived()).isFalse();
@@ -106,9 +90,7 @@ public class FeeCalculatorIntegrationTest {
 
     @Test
     public void shouldCalculateBothSidesForCrossCurrencyTransaction() {
-        FeeCalculationResult result = runTransaction("tx-6", new BigDecimal("1000"),
-                Currency.USD, Currency.IQD, TransactionType.PAYMENT,
-                "personal-sender", UserType.PERSONAL, "receiver", UserType.PERSONAL);
+        FeeCalculationResult result = runTransaction("tx-6", new BigDecimal("1000"), Currency.USD, Currency.IQD, TransactionType.PAYMENT, "personal-sender", UserType.PERSONAL, "receiver", UserType.PERSONAL);
 
         assertThat(result.getSenderResult().getFinalFee()).isEqualByComparingTo(new BigDecimal("7.00"));
         assertThat(result.getSenderResult().getCurrency()).isEqualTo(Currency.USD);
@@ -120,18 +102,14 @@ public class FeeCalculatorIntegrationTest {
 
     @Test
     public void shouldPreferPartialSourceCurrencyMatch() {
-        FeeCalculationResult result = runTransaction("tx-7", new BigDecimal("10000"),
-                Currency.USD, Currency.EUR, TransactionType.WIRE_TRANSFER,
-                "corp-sender", UserType.CORPORATE, "receiver", UserType.PERSONAL);
+        FeeCalculationResult result = runTransaction("tx-7", new BigDecimal("10000"), Currency.USD, Currency.EUR, TransactionType.WIRE_TRANSFER, "corp-sender", UserType.CORPORATE, "receiver", UserType.PERSONAL);
 
         assertThat(result.getSenderResult().getFinalFee()).isEqualByComparingTo(new BigDecimal("30.00"));
     }
 
     @Test
     public void shouldIgnoreInactiveRule() {
-        FeeCalculationResult result = runTransaction("tx-8", new BigDecimal("1000"),
-                Currency.USD, Currency.EUR, TransactionType.PAYMENT,
-                "personal-sender", UserType.PERSONAL, "receiver", UserType.PERSONAL);
+        FeeCalculationResult result = runTransaction("tx-8", new BigDecimal("1000"), Currency.USD, Currency.EUR, TransactionType.PAYMENT, "personal-sender", UserType.PERSONAL, "receiver", UserType.PERSONAL);
 
         BigDecimal fivePercentFee = new BigDecimal("50.00");
         assertThat(result.getSenderResult().getFinalFee()).isNotEqualByComparingTo(fivePercentFee);
@@ -140,9 +118,7 @@ public class FeeCalculatorIntegrationTest {
 
     @Test
     public void shouldHandleSelfTransfer() {
-        FeeCalculationResult result = runTransaction("tx-9", new BigDecimal("1000"),
-                Currency.EUR, Currency.EUR, TransactionType.WIRE_TRANSFER,
-                "corp-user", UserType.CORPORATE, "corp-user", UserType.CORPORATE);
+        FeeCalculationResult result = runTransaction("tx-9", new BigDecimal("1000"), Currency.EUR, Currency.EUR, TransactionType.WIRE_TRANSFER, "corp-user", UserType.CORPORATE, "corp-user", UserType.CORPORATE);
 
         assertThat(result.getSenderResult()).isNotNull();
         assertThat(result.getReceiverResult()).isNotNull();
@@ -152,9 +128,7 @@ public class FeeCalculatorIntegrationTest {
 
     @Test
     public void shouldMatchSecondUserSpecificRule() {
-        FeeCalculationResult result = runTransaction("tx-10", new BigDecimal("2000"),
-                Currency.EUR, Currency.IQD, TransactionType.WIRE_TRANSFER,
-                "user-456", UserType.CORPORATE, "receiver", UserType.PERSONAL);
+        FeeCalculationResult result = runTransaction("tx-10", new BigDecimal("2000"), Currency.EUR, Currency.IQD, TransactionType.WIRE_TRANSFER, "user-456", UserType.CORPORATE, "receiver", UserType.PERSONAL);
 
         assertThat(result.getSenderResult().getFinalFee()).isEqualByComparingTo(new BigDecimal("7.50"));
     }
@@ -162,9 +136,7 @@ public class FeeCalculatorIntegrationTest {
 
     @Test
     public void shouldCalculateBusinessWireTransferFee() {
-        FeeCalculationResult result = runTransaction("tx-11", new BigDecimal("5000"),
-                Currency.EUR, Currency.EUR, TransactionType.WIRE_TRANSFER,
-                "biz-sender", UserType.BUSINESS, "receiver", UserType.PERSONAL);
+        FeeCalculationResult result = runTransaction("tx-11", new BigDecimal("5000"), Currency.EUR, Currency.EUR, TransactionType.WIRE_TRANSFER, "biz-sender", UserType.BUSINESS, "receiver", UserType.PERSONAL);
 
         assertThat(result.getSenderResult().isWaived()).isFalse();
         assertThat(result.getSenderResult().getFinalFee()).isNotNull();
