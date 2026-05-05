@@ -3,6 +3,7 @@ package com.gateway.fee.domain.resolution;
 import com.gateway.fee.domain.exception.NoMatchingRuleException;
 import com.gateway.fee.domain.model.*;
 import com.gateway.fee.domain.registry.FeeRuleRegistry;
+import io.vavr.Tuple;
 import io.vavr.collection.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class FeeRuleResolver {
     private final FeeRuleRegistry feeRuleRegistry;
 
-    public FeeRule resolve( String userId, UserType userType, TransactionType transactionType, Currency sourceCurrency, Currency  destinationCurrency) {
+    public FeeRule resolve(String userId, UserType userType, TransactionType transactionType, Currency sourceCurrency, Currency destinationCurrency) {
         List<FeeRule> filtered = feeRuleRegistry.findAllActive()
                 .filter(rule -> matches(rule, userId, userType, transactionType, sourceCurrency, destinationCurrency));
 
@@ -23,24 +24,21 @@ public class FeeRuleResolver {
 
         return filtered.sortBy(rule -> -score(rule, sourceCurrency, destinationCurrency)).head(); // sort by score in descending order;
     }
+
     // check matching rules
-    private boolean matches(FeeRule rule, String userId, UserType userType, TransactionType transactionType, Currency sourceCurrency, Currency destinationCurrency) {
-        if (rule.getUserId() != null && !rule.getUserId().equals(userId)) {
-            return false;
-        }
-        if (rule.getUserType() != null && rule.getUserType() != userType) {
-            return false;
-        }
-        if (rule.getTransactionType() != null && rule.getTransactionType() != transactionType) {
-            return false;
-        }
-        if (rule.getSourceCurrency() != null && rule.getSourceCurrency() != sourceCurrency) {
-            return false;
-        }
-        if (rule.getDestinationCurrency() != null && rule.getDestinationCurrency() != destinationCurrency) {
-            return false;
-        }
-        return true;
+    // this method checks if the rule matches the transaction details, it returns true if all non-null fields in the rule match the transaction details,
+    // (if the condition after the forAll keyword fails for any pair(tuple) it will return false, if all pairs match it will return true)
+
+    private boolean matches(FeeRule rule, String userId, UserType userType,
+                            TransactionType transactionType, Currency sourceCurrency,
+                            Currency destinationCurrency) {
+        return List.of(
+                Tuple.of(rule.getUserId(), userId),
+                Tuple.of(rule.getUserType(), userType),
+                Tuple.of(rule.getTransactionType(), transactionType),
+                Tuple.of(rule.getSourceCurrency(), sourceCurrency),
+                Tuple.of(rule.getDestinationCurrency(), destinationCurrency)
+        ).forAll(pair -> pair._1 == null || pair._1.equals(pair._2));
     }
 
     private int score(FeeRule rule, Currency sourceCurrency, Currency destinationCurrency) { // a system to compare the rules by priority
@@ -48,7 +46,7 @@ public class FeeRuleResolver {
         if (rule.getUserId() != null) score += 1000;
         if (rule.getTransactionType() != null) score += 100;
         if (rule.getUserType() != null) score += 1;
-        score += currencyScore(rule, sourceCurrency, destinationCurrency) * 10 ;// multiplying by 10 to make the digit greater beacuse of the priority
+        score += currencyScore(rule, sourceCurrency, destinationCurrency) * 10;// multiplying by 10 to make the digit greater beacuse of the priority
 
         return score;
     }
