@@ -23,12 +23,19 @@ public class FeeRuleJsonLoader {
         this.objectMapper.registerModule(new JavaTimeModule());
     }
 
+    /**
+     * Loads fee rules from a JSON file.
+     *
+     * @throws IOException               if the file is missing or cannot be parsed as valid JSON
+     * @throws FeeConfigurationException if any rule fails domain validation
+     */
     public List<FeeRule> load(String filePath) throws IOException {
         File file = new File(filePath);
         java.util.List<FeeRuleDto> dtos = objectMapper
                 .readValue(file, new TypeReference<java.util.List<FeeRuleDto>>(){
                 });
-        return List.ofAll(dtos).map(this::toFeeRule);    }
+        return List.ofAll(dtos).map(this::toFeeRule);
+    }
     private FeeRule toFeeRule(FeeRuleDto dto) {
         return new FeeRule(
                 dto.getRuleId(),
