@@ -10,31 +10,26 @@ public class MarginalTierFeeStrategy implements FeeCalculationStrategy {
 
     @Override
     public BigDecimal calculate(BigDecimal amount, FeeSideDefinition fee) {
-        BigDecimal total = BigDecimal.ZERO;
-//TO DO: Change for loop to a better approach.
-        for (int i = 0; i < fee.getTiers().size(); i++) {
-            TierBracket bracket = fee.getTiers().get(i);
-            // added those 3 only for better readability
-            BigDecimal from = bracket.getFromAmount();
-            BigDecimal to = bracket.getToAmount();
-            BigDecimal rate = bracket.getRate();
-
-            if (amount.compareTo(from) <= 0) {
-                break;
-            }
-
-            BigDecimal portion;
-            if (to == null || amount.compareTo(to) < 0) {
-                // last bracket to be checked
-                portion = amount.subtract(from);
-                total = total.add(portion.multiply(rate));
-                break;
-            } else {
-                //
-                portion = to.subtract(from);
-                total = total.add(portion.multiply(rate));
-            }
+        if(amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            return BigDecimal.ZERO;
         }
-        return total;
-    }
+        return fee.getTiers().toJavaStream()
+                .filter(bracket -> amount.compareTo(bracket.getFromAmount()) > 0)
+
+                .map(bracket -> {
+                    BigDecimal from = bracket.getFromAmount();
+                    BigDecimal to = bracket.getToAmount();
+                    BigDecimal rate = bracket.getRate();
+
+                    BigDecimal upperLimit;
+                    if (to == null || amount.compareTo(to) < 0) {
+                        upperLimit = amount;
+                    } else {
+                        upperLimit = to;
+                    }
+                    BigDecimal portion = upperLimit.subtract(from);
+                    return portion.multiply(rate);
+                })
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+      }
 }
