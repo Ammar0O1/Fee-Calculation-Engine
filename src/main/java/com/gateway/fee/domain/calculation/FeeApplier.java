@@ -23,10 +23,7 @@ if(minCap != null && roundedFee.compareTo(minCap) < 0) {
     capApplied = "MAX_CAP_APPLIED";
     capAdjustment = maxCap.subtract(roundedFee);
 }
-
         return new FeeSideResult(null, null, null, null, currency, rawFee, roundedFee,
-                capApplied, capAdjustment, finalFee, fee, false);    // the first 4 is intern C's Job
-                                                                            // the reason waved is false is because FeeApplier only run when not waived
-
+                capApplied, capAdjustment, finalFee, fee, false); // the reason waved is false is because FeeApplier only run when not waived
     }
 }
