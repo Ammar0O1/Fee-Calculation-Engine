@@ -19,6 +19,7 @@ import java.util.UUID;
 public class FeeRuleEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "rule_id")
     private UUID ruleId;
 

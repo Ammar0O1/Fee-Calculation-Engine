@@ -1,6 +1,6 @@
 [
   {
-    "ruleId": "RULE-1",
+    "ruleId": "00000000-0000-0000-0000-000000000001",
     "userId": "USER-1",
     "userType": "PERSONAL",
     "transactionType": "WIRE_TRANSFER",
@@ -33,7 +33,7 @@
     "description": "Test Rule 1"
   },
   {
-    "ruleId": "RULE-2",
+    "ruleId": "00000000-0000-0000-0000-000000000002",
     "userId": null,
     "userType": "CORPORATE",
     "transactionType": "WIRE_TRANSFER",

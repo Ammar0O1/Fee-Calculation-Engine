@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -35,7 +36,7 @@ class FeeRuleJsonLoaderTest {
 
         // Verify Rule 1 mapping
         FeeRule rule1 = rules.get(0);
-        assertThat(rule1.getRuleId()).isEqualTo("RULE-1");
+        assertThat(rule1.getRuleId()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000001"));
         assertThat(rule1.getUserId()).isEqualTo("USER-1");
         assertThat(rule1.getUserType()).isEqualTo(UserType.PERSONAL);
         assertThat(rule1.getTransactionType()).isEqualTo(TransactionType.WIRE_TRANSFER);
@@ -61,7 +62,7 @@ class FeeRuleJsonLoaderTest {
 
         // Verify Rule 2 mapping (nulls and different values)
         FeeRule rule2 = rules.get(1);
-        assertThat(rule2.getRuleId()).isEqualTo("RULE-2");
+        assertThat(rule2.getRuleId()).isEqualTo(UUID.fromString("00000000-0000-0000-0000-000000000002"));
         assertThat(rule2.getUserId()).isNull();
         assertThat(rule2.getSourceCurrency()).isEqualTo(Currency.EUR);
         assertThat(rule2.getDestinationCurrency()).isEqualTo(Currency.EUR);
@@ -96,7 +97,7 @@ class FeeRuleJsonLoaderTest {
         String json = """
             [
               {
-                "ruleId": "RULE-TIERS-NULL",
+                "ruleId": "00000000-0000-0000-0000-000000000099",
                 "senderFee": {
                   "calculationMode": "TIERED_FLAT",
                   "tiers": null

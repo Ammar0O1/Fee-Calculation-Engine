@@ -1,5 +1,6 @@
 package com.gateway.fee.domain.model;
 
+import com.gateway.fee.domain.exception.FeeConfigurationException;
 import io.vavr.collection.List;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
@@ -14,7 +15,7 @@ class FeeSideDefinitionTest {
 
     @Test
     void shouldThrowIfFlatFeeAmountIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> new FeeSideDefinition(CalculationMode.FLAT, null, null, null, null, null));
+        assertThrows(FeeConfigurationException.class, () -> new FeeSideDefinition(CalculationMode.FLAT, null, null, null, null, null));
     }
 
     @Test
@@ -24,7 +25,7 @@ class FeeSideDefinitionTest {
 
     @Test
     void shouldThrowIfPercentageIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> new FeeSideDefinition(CalculationMode.PERCENTAGE, null, null, null, null, null));
+        assertThrows(FeeConfigurationException.class, () -> new FeeSideDefinition(CalculationMode.PERCENTAGE, null, null, null, null, null));
     }
 
     @Test
@@ -34,12 +35,12 @@ class FeeSideDefinitionTest {
 
     @Test
     void shouldThrowIfHybridFlatAmountIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> new FeeSideDefinition(CalculationMode.HYBRID, null, new BigDecimal("0.01"), null, null, null));
+        assertThrows(FeeConfigurationException.class, () -> new FeeSideDefinition(CalculationMode.HYBRID, null, new BigDecimal("0.01"), null, null, null));
     }
 
     @Test
     void shouldThrowIfHybridPercentageIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> new FeeSideDefinition(CalculationMode.HYBRID, new BigDecimal("5"), null, null, null, null));
+        assertThrows(FeeConfigurationException.class, () -> new FeeSideDefinition(CalculationMode.HYBRID, new BigDecimal("5"), null, null, null, null));
     }
 
     @Test
@@ -50,7 +51,7 @@ class FeeSideDefinitionTest {
 
     @Test
     void shouldThrowIfTieredFlatTiersIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> new FeeSideDefinition(CalculationMode.TIERED_FLAT, null, null, null, null, null));
+        assertThrows(FeeConfigurationException.class, () -> new FeeSideDefinition(CalculationMode.TIERED_FLAT, null, null, null, null, null));
     }
 
     @Test
@@ -66,7 +67,7 @@ class FeeSideDefinitionTest {
 
     @Test
     void shouldThrowIfMinCapGreaterThanMaxCap() {
-        assertThrows(IllegalArgumentException.class, () -> new FeeSideDefinition(CalculationMode.FLAT, new BigDecimal("5"), null, null, new BigDecimal("50"), new BigDecimal("5")));
+        assertThrows(FeeConfigurationException.class, () -> new FeeSideDefinition(CalculationMode.FLAT, new BigDecimal("5"), null, null, new BigDecimal("50"), new BigDecimal("5")));
     }
 
     @Test

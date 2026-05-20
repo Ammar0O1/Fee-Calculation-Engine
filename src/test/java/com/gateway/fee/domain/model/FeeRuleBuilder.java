@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class FeeRuleBuilder {
-    private String ruleId = UUID.randomUUID().toString();
+    private UUID ruleId = UUID.randomUUID();
     private String userId;
     private UserType userType;
     private TransactionType transactionType;
@@ -45,7 +45,7 @@ public class FeeRuleBuilder {
         return this;
     }
 
-    public FeeRuleBuilder withRuleId(String ruleId) {
+    public FeeRuleBuilder withRuleId(UUID ruleId) {
         this.ruleId = ruleId;
         return this;
     }
