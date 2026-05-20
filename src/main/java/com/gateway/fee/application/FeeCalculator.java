@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Getter
@@ -123,7 +124,7 @@ public class FeeCalculator {
         );
     }
     // Builds a result for a waived fee side, only 4 parameters because the rest are constant for any waived transaction
-    private FeeSideResult buildWaivedResult(String userId, UserType userType, String matchedRuleId, Currency currency) {
+    private FeeSideResult buildWaivedResult(String userId, UserType userType, UUID matchedRuleId, Currency currency) {
         return new FeeSideResult(
                 userId,
                 userType,

@@ -14,6 +14,7 @@ import java.util.UUID;
 public class TierBracketEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "bracket_id")
     private UUID bracketId;
 

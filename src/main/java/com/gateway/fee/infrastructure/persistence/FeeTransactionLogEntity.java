@@ -20,6 +20,7 @@ import java.util.UUID;
 public class FeeTransactionLogEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "log_id")
     private UUID logId;
 

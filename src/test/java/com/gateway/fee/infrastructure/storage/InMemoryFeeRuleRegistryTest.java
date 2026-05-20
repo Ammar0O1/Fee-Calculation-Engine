@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryFeeRuleRegistryTest {
@@ -18,19 +19,19 @@ class InMemoryFeeRuleRegistryTest {
         registry = new InMemoryFeeRuleRegistry();
     }
 
-    private FeeRule createRule(String id, boolean active) {
+    private FeeRule createRule(UUID id, boolean active) {
         return createRule(id, active, "user-1");
     }
 
-    private FeeRule createRule(String id, boolean active, String userId) {
+    private FeeRule createRule(UUID id, boolean active, String userId) {
         FeeSideDefinition fee = new FeeSideDefinition(CalculationMode.FLAT, new BigDecimal("5"), null, null, null, null);
         return new FeeRule(id, userId, UserType.PERSONAL, TransactionType.PAYMENT, Currency.USD, Currency.EUR, fee, null, LocalDateTime.now(), active, "desc");
     }
 
     @Test
     void shouldFindAllActiveRules() {
-        FeeRule activeRule = createRule("rule-1", true);
-        FeeRule inactiveRule = createRule("rule-2", false);
+        FeeRule activeRule = createRule(UUID.randomUUID(), true);
+        FeeRule inactiveRule = createRule(UUID.randomUUID(), false);
 
         registry.add(activeRule);
         registry.add(inactiveRule);
@@ -42,7 +43,7 @@ class InMemoryFeeRuleRegistryTest {
 
     @Test
     void shouldNotFindInactiveRulesInActiveList() {
-        FeeRule inactiveRule = createRule("rule-1", false);
+        FeeRule inactiveRule = createRule(UUID.randomUUID(), false);
         registry.add(inactiveRule);
         
         List<FeeRule> activeRules = registry.findAllActive();
@@ -51,8 +52,9 @@ class InMemoryFeeRuleRegistryTest {
 
     @Test
     void shouldThrowOnDuplicateRuleId() {
-        FeeRule rule1 = createRule("rule-1", true);
-        FeeRule rule2 = createRule("rule-1", true);
+        UUID ruleId = UUID.randomUUID();
+        FeeRule rule1 = createRule(ruleId, true);
+        FeeRule rule2 = createRule(ruleId, true);
         
         registry.add(rule1);
         assertThrows(DuplicateRuleException.class, () -> registry.add(rule2));
@@ -60,8 +62,8 @@ class InMemoryFeeRuleRegistryTest {
 
     @Test
     void shouldFindByUserId() {
-        FeeRule user1Rule = createRule("rule-1", true, "user-1");
-        FeeRule user2Rule = createRule("rule-2", true, "user-2");
+        FeeRule user1Rule = createRule(UUID.randomUUID(), true, "user-1");
+        FeeRule user2Rule = createRule(UUID.randomUUID(), true, "user-2");
         
         registry.add(user1Rule);
         registry.add(user2Rule);
@@ -73,7 +75,7 @@ class InMemoryFeeRuleRegistryTest {
 
     @Test
     void shouldReturnEmptyListWhenNoUserIdMatch() {
-        FeeRule user1Rule = createRule("rule-1", true, "user-1");
+        FeeRule user1Rule = createRule(UUID.randomUUID(), true, "user-1");
         registry.add(user1Rule);
         
         List<FeeRule> results = registry.findByUserId("user-non-existent");

@@ -48,7 +48,7 @@ public class BuildersTest {
         assertThatThrownBy(() -> new FeeSideDefinitionBuilder()
                 .withCalculationMode(FLAT)
                 .build()
-        ).isInstanceOf(IllegalArgumentException.class)
+        ).isExactlyInstanceOf(com.gateway.fee.domain.exception.FeeConfigurationException.class)
          .hasMessageContaining("FlatAmount");
     }
 

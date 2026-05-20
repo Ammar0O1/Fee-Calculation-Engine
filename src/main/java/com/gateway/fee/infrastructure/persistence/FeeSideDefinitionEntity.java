@@ -23,6 +23,7 @@ import java.util.UUID;
 public class FeeSideDefinitionEntity {
 
         @Id
+        @GeneratedValue(strategy = GenerationType.UUID)
         @Column(name = "definition_id")
         private UUID definitionId;
 

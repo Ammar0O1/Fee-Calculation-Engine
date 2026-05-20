@@ -7,8 +7,10 @@ import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 
+import java.util.UUID;
+
 public class InMemoryFeeRuleRegistry implements FeeRuleRegistry {
-    private Map<String, FeeRule> rules = HashMap.empty();
+    private Map<UUID,FeeRule> rules = HashMap.empty();
 
 
     @Override
