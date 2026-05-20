@@ -3,10 +3,11 @@ import com.gateway.fee.domain.model.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 public class FeeRuleDto {
-        private String ruleId;
+        private UUID ruleId;
         private String userId;
         private UserType userType;
         private TransactionType transactionType;
