@@ -2,6 +2,7 @@ package com.gateway.fee.infrastructure.persistence;
 import com.gateway.fee.domain.model.Currency;
 import com.gateway.fee.domain.model.TransactionType;
 import com.gateway.fee.domain.model.UserType;
+import com.gateway.fee.infrastructure.persistence.entity.FeeRuleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

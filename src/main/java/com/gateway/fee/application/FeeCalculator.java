@@ -7,9 +7,11 @@ import com.gateway.fee.domain.model.*;
 import com.gateway.fee.domain.resolution.FeeRuleResolver;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
 
 @RequiredArgsConstructor
 @Getter
@@ -18,13 +20,14 @@ public class FeeCalculator {
     private final FeeRuleResolver feeRuleResolver;
     private final CalculationStrategyFactory calculationStrategyFactory;
     private final FeeApplier feeApplier;
+    private final FeeTransactionLogService feeTransactionLogService;
 
     // this method has no logic in it, its just using other private methods to do the calculation
     public FeeCalculationResult calculate(Transaction transaction) {
         FeeSideResult senderResult = processSenderSide(transaction);
         FeeSideResult receiverResult = processReceiverSide(transaction);
 
-        return new FeeCalculationResult(
+        FeeCalculationResult result = new FeeCalculationResult(
                 transaction.getTransactionId(),
                 transaction.getAmount(),
                 transaction.getSourceCurrency(),
@@ -34,6 +37,8 @@ public class FeeCalculator {
                 receiverResult,
                 LocalDateTime.now()
         );
+        feeTransactionLogService.log(result); // so we can log the result of the calculation to db
+        return result;
     }
 
     // this method is used to process and pass the values for the sender side of the fee calculation (calling resolver)
@@ -123,6 +128,7 @@ public class FeeCalculator {
                 false
         );
     }
+
     // Builds a result for a waived fee side, only 4 parameters because the rest are constant for any waived transaction
     private FeeSideResult buildWaivedResult(String userId, UserType userType, UUID matchedRuleId, Currency currency) {
         return new FeeSideResult(
