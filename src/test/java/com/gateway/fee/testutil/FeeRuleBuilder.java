@@ -4,13 +4,14 @@ import com.gateway.fee.domain.model.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 // Custom test builder instead of Lombok's @Builder because:
 //Lombok's @Builder doesn't support default values — our builder provides sensible defaults
 //    so that FeeRuleBuilder.aRule().build() produces a valid rule with zero configuration
 public class FeeRuleBuilder {
 
-    private String ruleId = "default-rule";
+    private UUID ruleId = UUID.randomUUID();
     private String userId = null;
     private UserType userType = null;
     private TransactionType transactionType = null;
@@ -26,7 +27,7 @@ public class FeeRuleBuilder {
         return new FeeRuleBuilder();
     }
 
-    public FeeRuleBuilder withRuleId(String ruleId) {
+    public FeeRuleBuilder withRuleId(UUID ruleId) {
         this.ruleId = ruleId;
         return this;
     }
