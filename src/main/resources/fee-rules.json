@@ -1,6 +1,6 @@
 [
   {
-    "ruleId": "rule-default",
+    "ruleId": "00000000-0000-0000-0000-000000000001",
     "userId": null,
     "userType": null,
     "transactionType": null,
@@ -18,30 +18,29 @@
       "maxCap": null
     },
     "receiverFee": null
-  }
-,
-    {
-      "ruleId": "rule-001",
-      "userId": null,
-      "userType": "CORPORATE",
-      "transactionType": "WIRE_TRANSFER",
-      "sourceCurrency": null,
-      "destinationCurrency": null,
-      "active": true,
-      "description": "Corporate wire transfer rule",
-      "effectiveDate": "2024-01-01T00:00:00",
-      "senderFee": {
-        "calculationMode": "PERCENTAGE",
-        "percentage": 0.005,
-        "flatAmount": null,
-        "tiers": null,
-        "minCap": null,
-        "maxCap": null
-      },
-      "receiverFee": null
-    },
+  },
   {
-    "ruleId": "rule-002",
+    "ruleId": "00000000-0000-0000-0000-000000000002",
+    "userId": null,
+    "userType": "CORPORATE",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Corporate wire transfer rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "percentage": 0.005,
+      "flatAmount": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "00000000-0000-0000-0000-000000000003",
     "userId": null,
     "userType": "PERSONAL",
     "transactionType": "INTERNAL_TRANSFER",
@@ -61,7 +60,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-003",
+    "ruleId": "00000000-0000-0000-0000-000000000004",
     "userId": null,
     "userType": "BUSINESS",
     "transactionType": "WIRE_TRANSFER",
@@ -81,7 +80,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-004",
+    "ruleId": "00000000-0000-0000-0000-000000000005",
     "userId": null,
     "userType": "PERSONAL",
     "transactionType": "PAYMENT",
@@ -108,7 +107,7 @@
     }
   },
   {
-    "ruleId": "rule-005",
+    "ruleId": "00000000-0000-0000-0000-000000000006",
     "userId": "user-123",
     "userType": "CORPORATE",
     "transactionType": "WIRE_TRANSFER",
@@ -128,7 +127,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-006",
+    "ruleId": "00000000-0000-0000-0000-000000000007",
     "userId": null,
     "userType": "BUSINESS_TERMINAL",
     "transactionType": "PAYMENT",

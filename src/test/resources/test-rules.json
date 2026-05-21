@@ -1,6 +1,6 @@
 [
   {
-    "ruleId": "rule-default",
+    "ruleId": "00000000-0000-0000-0000-000000000001",
     "userId": null,
     "userType": null,
     "transactionType": null,
@@ -18,10 +18,9 @@
       "maxCap": null
     },
     "receiverFee": null
-  }
-,
+  },
   {
-    "ruleId": "rule-001",
+    "ruleId": "00000000-0000-0000-0000-000000000002",
     "userId": null,
     "userType": "CORPORATE",
     "transactionType": "WIRE_TRANSFER",
@@ -41,7 +40,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-002",
+    "ruleId": "00000000-0000-0000-0000-000000000003",
     "userId": null,
     "userType": "PERSONAL",
     "transactionType": "INTERNAL_TRANSFER",
@@ -61,7 +60,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-003",
+    "ruleId": "00000000-0000-0000-0000-000000000004",
     "userId": null,
     "userType": "BUSINESS",
     "transactionType": "WIRE_TRANSFER",
@@ -81,7 +80,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-004",
+    "ruleId": "00000000-0000-0000-0000-000000000005",
     "userId": null,
     "userType": "PERSONAL",
     "transactionType": "PAYMENT",
@@ -108,7 +107,7 @@
     }
   },
   {
-    "ruleId": "rule-005",
+    "ruleId": "00000000-0000-0000-0000-000000000006",
     "userId": "user-123",
     "userType": "CORPORATE",
     "transactionType": "WIRE_TRANSFER",
@@ -128,7 +127,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-006",
+    "ruleId": "00000000-0000-0000-0000-000000000007",
     "userId": null,
     "userType": "BUSINESS_TERMINAL",
     "transactionType": "PAYMENT",
@@ -152,7 +151,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-007",
+    "ruleId": "00000000-0000-0000-0000-000000000008",
     "userId": null,
     "userType": "PERSONAL",
     "transactionType": "PAYMENT",
@@ -176,7 +175,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-008",
+    "ruleId": "00000000-0000-0000-0000-000000000009",
     "userId": null,
     "userType": "CORPORATE",
     "transactionType": "WIRE_TRANSFER",
@@ -196,7 +195,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-009",
+    "ruleId": "00000000-0000-0000-0000-000000000010",
     "userId": null,
     "userType": "BUSINESS",
     "transactionType": "PAYMENT",
@@ -216,7 +215,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-010",
+    "ruleId": "00000000-0000-0000-0000-000000000011",
     "userId": null,
     "userType": "PERSONAL",
     "transactionType": "PAYMENT",
@@ -236,7 +235,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-011",
+    "ruleId": "00000000-0000-0000-0000-000000000012",
     "userId": null,
     "userType": "BUSINESS",
     "transactionType": "WIRE_TRANSFER",
@@ -256,7 +255,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-012",
+    "ruleId": "00000000-0000-0000-0000-000000000013",
     "userId": null,
     "userType": "CORPORATE_TERMINAL",
     "transactionType": "PAYMENT",
@@ -276,7 +275,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-013",
+    "ruleId": "00000000-0000-0000-0000-000000000014",
     "userId": "user-456",
     "userType": "CORPORATE",
     "transactionType": "WIRE_TRANSFER",
@@ -296,7 +295,7 @@
     "receiverFee": null
   },
   {
-    "ruleId": "rule-014",
+    "ruleId": "00000000-0000-0000-0000-000000000015",
     "userId": null,
     "userType": "PERSONAL",
     "transactionType": "PAYMENT",

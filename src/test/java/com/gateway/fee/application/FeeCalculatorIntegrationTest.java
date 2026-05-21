@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class FeeCalculatorIntegrationTest {
 
@@ -29,7 +30,8 @@ public class FeeCalculatorIntegrationTest {
         FeeRuleResolver resolver = new FeeRuleResolver(registry);
         CalculationStrategyFactory factory = new CalculationStrategyFactory();
         FeeApplier applier = new FeeApplier();
-        calculator = new FeeCalculator(resolver, factory, applier);
+        FeeTransactionLogService logService = mock(FeeTransactionLogService.class);
+        calculator = new FeeCalculator(resolver, factory, applier, logService);
     }
 
     private FeeCalculationResult runTransaction(String txId, BigDecimal amount, Currency src, Currency dst, TransactionType txType, String senderId, UserType senderType, String receiverId, UserType receiverType) {
@@ -125,14 +127,12 @@ public class FeeCalculatorIntegrationTest {
         assertThat(result.getSenderResult().getFinalFee()).isNotNull();
     }
 
-
     @Test
     public void shouldMatchSecondUserSpecificRule() {
         FeeCalculationResult result = runTransaction("tx-10", new BigDecimal("2000"), Currency.EUR, Currency.IQD, TransactionType.WIRE_TRANSFER, "user-456", UserType.CORPORATE, "receiver", UserType.PERSONAL);
 
         assertThat(result.getSenderResult().getFinalFee()).isEqualByComparingTo(new BigDecimal("7.50"));
     }
-
 
     @Test
     public void shouldCalculateBusinessWireTransferFee() {
