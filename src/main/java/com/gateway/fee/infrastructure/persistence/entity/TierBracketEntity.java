@@ -1,4 +1,4 @@
-package com.gateway.fee.infrastructure.persistence;
+package com.gateway.fee.infrastructure.persistence.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;

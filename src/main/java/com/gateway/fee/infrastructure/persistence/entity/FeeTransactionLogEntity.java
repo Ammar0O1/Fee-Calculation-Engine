@@ -1,4 +1,4 @@
-package com.gateway.fee.infrastructure.persistence;
+package com.gateway.fee.infrastructure.persistence.entity;
 
 import com.gateway.fee.domain.model.Currency;
 import com.gateway.fee.domain.model.TransactionType;
