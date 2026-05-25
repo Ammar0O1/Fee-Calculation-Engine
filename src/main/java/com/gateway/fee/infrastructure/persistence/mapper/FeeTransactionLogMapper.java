@@ -1,25 +1,18 @@
 package com.gateway.fee.infrastructure.persistence.mapper;
-
 import com.gateway.fee.domain.model.FeeCalculationResult;
 import com.gateway.fee.domain.model.FeeSideResult;
 import com.gateway.fee.infrastructure.persistence.entity.FeeTransactionLogEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-// this class is one way only domain to entity
 @Component
 public class FeeTransactionLogMapper {
 
     public FeeTransactionLogEntity toEntity(FeeCalculationResult result) {
-        UUID logId = UUID.randomUUID();
         FeeSideResult sender = result.getSenderResult();
         FeeSideResult receiver = result.getReceiverResult();
 
         return FeeTransactionLogEntity.builder()
-                // Identification
-                .logId(logId)
-
-                // Transaction context (from result)
+                // Transaction context
                 .transactionId(result.getTransactionId())
                 .transactionAmount(result.getTransactionAmount())
                 .sourceCurrency(result.getSourceCurrency())
@@ -46,7 +39,7 @@ public class FeeTransactionLogMapper {
                 .receiverCapApplied(receiver.getCapApplied())
                 .receiverWaived(receiver.isWaived())
 
-               
+                // Timestamp
                 .calculatedAt(result.getCalculatedAt())
 
                 .build();
