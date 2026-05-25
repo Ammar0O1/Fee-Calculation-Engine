@@ -46,19 +46,15 @@ public class FeeRuleMapper {
     //ENTITY to DOMAIN (used when loading)
 
     public FeeRule toDomain(FeeRuleEntity entity) {
-        FeeSideDefinition senderFee = null;
-        FeeSideDefinition receiverFee = null;
-
-        java.util.List<FeeSideDefinitionEntity> sideEntities = entity.getSideDefinitions();
-        //TODO: Open to refactor if prefered
-        for (int i = 0; i < sideEntities.size(); i++) {
-            FeeSideDefinitionEntity sideEntity = sideEntities.get(i);
-            if ("SENDER".equals(sideEntity.getSide())) {
-                senderFee = toSideDefinitionDomain(sideEntity);
-            } else if ("RECEIVER".equals(sideEntity.getSide())) {
-                receiverFee = toSideDefinitionDomain(sideEntity);
-            }
-        }
+        //NOTE: we are using find here because we dont want to throw an exception and we are wrapping the list to vavr using List.ofAkk
+        //if the side is not found, we just return null
+        //this is because we dont want to fail the whole transaction if one side is missing
+        FeeSideDefinition senderFee = List.ofAll(entity.getSideDefinitions())
+                .find(side -> "SENDER".equals(side.getSide()))
+                .map(this::toSideDefinitionDomain).getOrNull();
+        FeeSideDefinition receiverFee = List.ofAll(entity.getSideDefinitions())
+                .find(side -> "RECEIVER".equals(side.getSide()))
+                .map(this::toSideDefinitionDomain).getOrNull();
 
         return new FeeRule(
                 entity.getRuleId(),
@@ -95,7 +91,6 @@ public class FeeRuleMapper {
 
         List<TierBracket> tiers = domain.getTiers();
         if (tiers != null && !tiers.isEmpty()) {
-            //TODO: Open to refactor if prefered
             for (int i = 0; i < tiers.size(); i++) {
                 entity.getTierBrackets().add(toTierBracketEntity(tiers.get(i), entity, i));
             }
