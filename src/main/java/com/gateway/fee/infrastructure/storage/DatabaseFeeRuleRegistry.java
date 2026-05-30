@@ -2,7 +2,7 @@ package com.gateway.fee.infrastructure.storage;
 
 import com.gateway.fee.domain.model.FeeRule;
 import com.gateway.fee.domain.registry.FeeRuleRegistry;
-import com.gateway.fee.infrastructure.persistence.FeeRuleRepository;
+import com.gateway.fee.infrastructure.persistence.mapper.FeeRuleRepository;
 import com.gateway.fee.infrastructure.persistence.entity.FeeRuleEntity;
 import com.gateway.fee.infrastructure.persistence.mapper.FeeRuleMapper;
 import io.vavr.collection.List;
