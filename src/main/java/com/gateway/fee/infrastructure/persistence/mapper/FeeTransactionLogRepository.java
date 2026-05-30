@@ -1,4 +1,4 @@
-package com.gateway.fee.infrastructure.persistence;
+package com.gateway.fee.infrastructure.persistence.mapper;
 import com.gateway.fee.domain.model.TransactionType;
 import com.gateway.fee.infrastructure.persistence.entity.FeeTransactionLogEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
