@@ -32,7 +32,7 @@ public class FeeRule {
     if (ruleId == null) {
         throw new IllegalArgumentException("Rule id must not be null");
     }
-        this.ruleId = UUID.randomUUID();
+        this.ruleId = (ruleId != null) ? ruleId : UUID.randomUUID();
         this.userId = userId;
         this.userType = userType;
         this.transactionType = transactionType;
