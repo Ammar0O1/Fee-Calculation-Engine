@@ -1,7 +1,7 @@
 package com.gateway.fee.application;
 
 import com.gateway.fee.domain.model.FeeCalculationResult;
-import com.gateway.fee.infrastructure.persistence.mapper.FeeTransactionLogRepository;
+import com.gateway.fee.infrastructure.persistence.FeeTransactionLogRepository;
 import com.gateway.fee.infrastructure.persistence.entity.FeeTransactionLogEntity;
 import com.gateway.fee.infrastructure.persistence.mapper.FeeTransactionLogMapper;
 import lombok.RequiredArgsConstructor;
