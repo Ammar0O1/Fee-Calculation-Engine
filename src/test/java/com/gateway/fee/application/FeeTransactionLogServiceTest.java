@@ -1,7 +1,7 @@
 package com.gateway.fee.application;
 
 import com.gateway.fee.domain.model.*;
-import com.gateway.fee.infrastructure.persistence.FeeTransactionLogRepository;
+import com.gateway.fee.infrastructure.persistence.repository.FeeTransactionLogRepository;
 import com.gateway.fee.infrastructure.persistence.entity.FeeTransactionLogEntity;
 import com.gateway.fee.infrastructure.persistence.mapper.FeeTransactionLogMapper;
 import org.junit.jupiter.api.Test;
