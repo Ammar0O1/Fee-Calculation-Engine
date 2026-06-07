@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:src/main/java/com/gateway/fee/infrastructure/persistence/FeeRuleRepository.java
 package com.gateway.fee.infrastructure.persistence;
+========
+package com.gateway.fee.infrastructure.persistence.repository;
+>>>>>>>> aecf952 (add DatabaseIntegrationTest extending AbstractPostgresIntegrationTest, organize repository folder):src/main/java/com/gateway/fee/infrastructure/persistence/repository/FeeRuleRepository.java
 import com.gateway.fee.domain.model.Currency;
 import com.gateway.fee.domain.model.TransactionType;
 import com.gateway.fee.domain.model.UserType;

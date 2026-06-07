@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:src/main/java/com/gateway/fee/infrastructure/persistence/FeeTransactionLogRepository.java
 package com.gateway.fee.infrastructure.persistence;
+========
+package com.gateway.fee.infrastructure.persistence.repository;
+>>>>>>>> aecf952 (add DatabaseIntegrationTest extending AbstractPostgresIntegrationTest, organize repository folder):src/main/java/com/gateway/fee/infrastructure/persistence/repository/FeeTransactionLogRepository.java
 import com.gateway.fee.domain.model.TransactionType;
 import com.gateway.fee.infrastructure.persistence.entity.FeeTransactionLogEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
