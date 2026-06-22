@@ -3,15 +3,18 @@ package com.gateway.fee.api.dto.response;
 import com.gateway.fee.domain.model.CalculationMode;
 import java.util.List;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class FeeSideDefinitionResponse {
-    private final CalculationMode calculationMode;
-    private final BigDecimal flatAmount;
-    private final BigDecimal percentage;
-    private final List<TierBracketResponse> tiers;
-    private final BigDecimal minCap;
-    private final BigDecimal maxCap;
+    private  CalculationMode calculationMode;
+    private  BigDecimal flatAmount;
+    private  BigDecimal percentage;
+    private  List<TierBracketResponse> tiers;
+    private  BigDecimal minCap;
+    private  BigDecimal maxCap;
 }
