@@ -3,6 +3,7 @@ package com.gateway.fee.api.dto.response;
 import com.gateway.fee.domain.model.Currency;
 import com.gateway.fee.domain.model.TransactionType;
 import com.gateway.fee.domain.model.UserType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class FeeRuleResponse {
     private  UUID ruleId;
     private  String userId;
