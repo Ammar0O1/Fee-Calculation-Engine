@@ -1,12 +1,15 @@
 package com.gateway.fee.api.dto.response;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class TierBracketResponse {
-    private final BigDecimal fromAmount;
-    private final BigDecimal toAmount;
-    private final BigDecimal rate;
+    private  BigDecimal fromAmount;
+    private  BigDecimal toAmount;
+    private  BigDecimal rate;
 }

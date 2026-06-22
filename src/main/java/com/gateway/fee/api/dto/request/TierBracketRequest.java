@@ -2,6 +2,8 @@ package com.gateway.fee.api.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
@@ -11,7 +13,8 @@ import java.math.BigDecimal;
  * validation is handled in the service layer.
  */
 
-@Data
+@Getter
+@NoArgsConstructor
 public class TierBracketRequest {
     @NotNull
     private BigDecimal fromAmount;
