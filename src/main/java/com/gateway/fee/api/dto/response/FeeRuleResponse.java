@@ -4,24 +4,27 @@ import com.gateway.fee.domain.model.Currency;
 import com.gateway.fee.domain.model.TransactionType;
 import com.gateway.fee.domain.model.UserType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class FeeRuleResponse {
-    private final UUID ruleId;
-    private final String userId;
-    private final UserType userType;
-    private final TransactionType transactionType;
-    private final Currency sourceCurrency;
-    private final Currency destinationCurrency;
-    private final FeeSideDefinitionResponse senderFee;
-    private final FeeSideDefinitionResponse receiverFee;
-    private final LocalDateTime effectiveDate;
-    private final boolean active;
-    private final String description;
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private  UUID ruleId;
+    private  String userId;
+    private  UserType userType;
+    private  TransactionType transactionType;
+    private  Currency sourceCurrency;
+    private  Currency destinationCurrency;
+    private  FeeSideDefinitionResponse senderFee;
+    private  FeeSideDefinitionResponse receiverFee;
+    private  LocalDateTime effectiveDate;
+    private  boolean active;
+    private  String description;
+    private  LocalDateTime createdAt;
+    private  LocalDateTime updatedAt;
 }

@@ -2,6 +2,8 @@ package com.gateway.fee.api.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,7 +15,8 @@ import java.util.List;
  * HYBRID requires both, TIERED modes require tiers.
  */
 
-@Data
+@Getter
+@NoArgsConstructor
 public class FeeSideDefinitionRequest {
     @NotNull
     private String calculationMode;
