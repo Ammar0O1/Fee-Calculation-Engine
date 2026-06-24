@@ -2,6 +2,7 @@ package com.gateway.fee.api.controller;
 
 import com.gateway.fee.api.dto.request.CreateDefaultRuleRequest;
 import com.gateway.fee.api.dto.response.FeeRuleResponse;
+import com.gateway.fee.api.service.FeeRuleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
