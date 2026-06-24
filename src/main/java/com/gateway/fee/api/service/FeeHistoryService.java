@@ -1,4 +1,4 @@
-package com.gateway.fee.api;
+package com.gateway.fee.api.service;
 
 import com.gateway.fee.infrastructure.persistence.repository.FeeTransactionLogRepository;
 import lombok.RequiredArgsConstructor;
