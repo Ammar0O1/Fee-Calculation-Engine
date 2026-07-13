@@ -34,10 +34,12 @@ public class UserSpecificFeeRuleController {
         return ResponseEntity.ok(responses);
     }
 
-    // READ all of the rules that applies to this user
+    // READ all the rules that applies to this user
     @GetMapping("/{userId}/effective")
-    public ResponseEntity<List<FeeRuleResponse>> getUserSpecificEffectiveRules(@PathVariable String userId) {
-        List<FeeRuleResponse> responses = feeRuleService.getEffectiveFeeSchedule(userId);
+    public ResponseEntity<List<FeeRuleResponse>> getUserSpecificEffectiveRules(
+            @PathVariable String userId,
+            @RequestParam String userType) {
+        List<FeeRuleResponse> responses = feeRuleService.getEffectiveFeeSchedule(userId, userType);
         return ResponseEntity.ok(responses);
     }
 
