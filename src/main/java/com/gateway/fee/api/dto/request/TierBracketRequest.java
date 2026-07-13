@@ -24,6 +24,6 @@ public class TierBracketRequest {
 
     /**
      * the (toAmount) does not need to be NotNull,
-     * becuase in last bracket it will be null since its the highest tier and has no upper bound. .
+     * becuase in last bracket it will be null since its the highest tier and has no upper bound .
      */
 }
