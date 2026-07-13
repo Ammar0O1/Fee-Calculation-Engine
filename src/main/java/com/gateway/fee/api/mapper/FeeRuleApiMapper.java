@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 @Component
-public class FeeRuleMapper {
+public class FeeRuleApiMapper {
     public TransactionType toTransactionType(String transactionType) {
         return transactionType != null ? TransactionType.valueOf(transactionType) : null;
     }
