@@ -105,7 +105,7 @@ public class FeeRuleService {
 
         // validation
         feeRuleValidator.validateSide(request.getSenderFee(), request.getReceiverFee());
-
+        feeRuleValidator.validateNotDuplicateForUpdate(feeRuleId,null,null, txType, srcCurrency, dstCurrency);
         // finding the rule
         FeeRuleEntity feeRuleEntity = feeRuleRepository.findById(feeRuleId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fee rule not found with id: " + feeRuleId));
@@ -206,6 +206,7 @@ public class FeeRuleService {
 
         // validation
         feeRuleValidator.validateSide(request.getSenderFee(), request.getReceiverFee());
+        feeRuleValidator.validateNotDuplicateForUpdate(feeRuleId,null, userType, txType, srcCurrency, dstCurrency);
 
         FeeRuleEntity feeRuleEntity = feeRuleRepository.findById(feeRuleId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fee rule not found with id: " + feeRuleId));
@@ -307,6 +308,8 @@ public class FeeRuleService {
 
         // validation
         feeRuleValidator.validateSide(request.getSenderFee(), request.getReceiverFee());
+        feeRuleValidator.validateNotDuplicateForUpdate(feeRuleId, userId, userType, txType, srcCurrency, dstCurrency);
+
         // creating Entity
         FeeRuleEntity feeRuleEntity = feeRuleRepository.findById(feeRuleId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fee rule not found with id: " + feeRuleId));
