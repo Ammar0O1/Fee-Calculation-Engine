@@ -6,6 +6,7 @@ import com.gateway.fee.infrastructure.persistence.entity.FeeRuleEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +15,9 @@ public interface FeeRuleRepository extends JpaRepository<FeeRuleEntity, UUID> {
     List<FeeRuleEntity> findByUserIdAndActiveTrue(String userId);
     List<FeeRuleEntity> findByUserTypeAndActiveTrue(UserType userType);
     List<FeeRuleEntity> findByTransactionTypeAndActiveTrue(TransactionType transactionType);
-
+    List<FeeRuleEntity> findByUserIdIsNullAndUserTypeIsNullAndActiveTrue();
+    List<FeeRuleEntity> findByUserIdIsNullAndUserTypeIsNotNullAndActiveTrue();
+    List<FeeRuleEntity> findByUserIdIsNullAndUserTypeAndActiveTrue(UserType userType);
     @Query("SELECT f FROM FeeRuleEntity f WHERE " +
             "((:userId IS NULL AND f.userId IS NULL)OR f.userId=:userId) " +
             "AND ((:userType IS NULL AND  f.userType IS NULL) OR f.userType= :userType) " +
@@ -30,4 +33,5 @@ public interface FeeRuleRepository extends JpaRepository<FeeRuleEntity, UUID> {
             @Param("sourceCurrency") Currency sourceCurrency,
             @Param("destinationCurrency") Currency destinationCurrency
     );
+
 }
