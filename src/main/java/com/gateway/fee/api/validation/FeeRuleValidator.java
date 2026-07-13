@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -31,6 +32,15 @@ public class FeeRuleValidator {
         );
         if (!exists.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Fee rule already exists for the given parameters");
+        }
+    }
+    // same duplicate validation but this is for updating(dont want to check userId cuz its always matches)
+    public void validateNotDuplicateForUpdate(UUID excludeRuleId, String userId, UserType userType,
+                                              TransactionType transactionType, Currency src, Currency dst) {
+        List<FeeRuleEntity> exists = feeRuleRepository.findByDimensionsExcludingId(
+                excludeRuleId, userId, userType, transactionType, src, dst);
+        if (!exists.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Another fee rule already exists with these dimensions");
         }
     }
 
