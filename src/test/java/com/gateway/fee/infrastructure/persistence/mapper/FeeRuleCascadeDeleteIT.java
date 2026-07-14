@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration test for ON DELETE CASCADE behavior on fee_rule.
- *
  * Unlike FeeRuleMapperTest (which is pure object conversion), this test
  * persists to the real database and verifies that deleting a fee_rule row
  * also deletes its fee_side_definition and tier_bracket children, as
