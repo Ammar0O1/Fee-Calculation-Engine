@@ -117,6 +117,7 @@ public class FeeRuleService {
         feeRuleEntity.setDescription(request.getDescription());
 
         feeRuleEntity.getSideDefinitions().clear(); // clear existing side definitions
+        feeRuleRepository.saveAndFlush(feeRuleEntity);   // force the delete to hit the DB now
 
         if (request.getSenderFee() != null) {
             feeRuleEntity.getSideDefinitions().add(
@@ -218,6 +219,8 @@ public class FeeRuleService {
         feeRuleEntity.setDescription(request.getDescription());
 
         feeRuleEntity.getSideDefinitions().clear(); // clear existing side definitions
+        feeRuleRepository.saveAndFlush(feeRuleEntity);   // force the delete to hit the DB now
+
 
         if (request.getSenderFee() != null) {
             feeRuleEntity.getSideDefinitions().add(
@@ -322,6 +325,8 @@ public class FeeRuleService {
         feeRuleEntity.setDescription(request.getDescription());
 
         feeRuleEntity.getSideDefinitions().clear();  // clear existing side definitions
+        feeRuleRepository.saveAndFlush(feeRuleEntity);   // force the delete to hit the DB now
+
         if (request.getSenderFee() != null) {
             feeRuleEntity.getSideDefinitions().add(
                     feeRuleApiMapper.toSideEntity(request.getSenderFee(), feeRuleEntity, "SENDER")
