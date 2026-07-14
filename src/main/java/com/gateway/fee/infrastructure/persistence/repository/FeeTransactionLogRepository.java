@@ -24,8 +24,8 @@ public interface FeeTransactionLogRepository extends JpaRepository<FeeTransactio
             + " AND (:transactionType IS NULL OR log.transactionType = :transactionType)"
             + " AND (:sourceCurrency IS NULL OR log.sourceCurrency = :sourceCurrency)"
             + " AND (:destinationCurrency IS NULL OR log.destinationCurrency = :destinationCurrency)"
-            + " AND (:dateFrom IS NULL OR log.calculatedAt >= :dateFrom)"
-            + " AND (:dateTo IS NULL OR log.calculatedAt <= :dateTo)")
+            + " AND (CAST(:dateFrom AS timestamp) IS NULL OR log.calculatedAt >= :dateFrom)"
+            + " AND (CAST(:dateTo AS timestamp ) IS NULL OR log.calculatedAt <= :dateTo)")
 
     Page<FeeTransactionLogEntity> findHistory(
             @Param("transactionId") String transactionId,
@@ -37,6 +37,65 @@ public interface FeeTransactionLogRepository extends JpaRepository<FeeTransactio
             @Param("dateTo") LocalDateTime dateTo,
             Pageable pageable
     );
-}
 
+    @Query("SELECT log.transactionType, SUM(COALESCE(log.senderFinalFee, 0) + COALESCE(log.receiverFinalFee, 0)) "
+            + "FROM FeeTransactionLogEntity log "
+            + "WHERE (CAST(:dateFrom AS timestamp) IS NULL OR log.calculatedAt >= :dateFrom) "
+            + "AND (CAST(:dateTo AS timestamp ) IS NULL OR log.calculatedAt <= :dateTo) "
+            + "GROUP BY log.transactionType")
+    List<Object[]> sumFeesByTransactionType(
+            @Param("dateFrom") LocalDateTime dateFrom,
+            @Param("dateTo") LocalDateTime dateTo
+    );
+
+    @Query("SELECT log.senderUserType, SUM(COALESCE(log.senderFinalFee, 0) ) "
+            + "FROM FeeTransactionLogEntity log "
+            + "WHERE (CAST(:dateFrom AS timestamp) IS NULL OR log.calculatedAt >= :dateFrom) "
+            + "AND (CAST(:dateTo AS timestamp ) IS NULL OR log.calculatedAt <= :dateTo) "
+            + "GROUP BY log.senderUserType")
+    List<Object[]> sumSenderFeesByUserType(
+            @Param("dateFrom") LocalDateTime dateFrom,
+            @Param("dateTo") LocalDateTime dateTo
+    );
+
+    @Query("SELECT log.receiverUserType, SUM(COALESCE(log.receiverFinalFee, 0) ) "
+            + "FROM FeeTransactionLogEntity log "
+            + "WHERE (CAST(:dateFrom AS timestamp) IS NULL OR log.calculatedAt >= :dateFrom) "
+            + "AND (CAST(:dateTo AS timestamp ) IS NULL OR log.calculatedAt <= :dateTo) "
+            + "GROUP BY log.receiverUserType")
+    List<Object[]> sumReceiverFeesByUserType(
+            @Param("dateFrom") LocalDateTime dateFrom,
+            @Param("dateTo") LocalDateTime dateTo
+    );
+
+    @Query("SELECT log.senderFeeCurrency, SUM(COALESCE(log.senderFinalFee, 0) ) "
+            + "FROM FeeTransactionLogEntity log "
+            + "WHERE (CAST(:dateFrom AS timestamp) IS NULL OR log.calculatedAt >= :dateFrom) "
+            + "AND (CAST(:dateTo AS timestamp ) IS NULL OR log.calculatedAt <= :dateTo) "
+            + "GROUP BY log.senderFeeCurrency")
+    List<Object[]> sumSenderFeesByCurrency(
+            @Param("dateFrom") LocalDateTime dateFrom,
+            @Param("dateTo") LocalDateTime dateTo
+    );
+
+    @Query("SELECT log.receiverFeeCurrency, SUM(COALESCE(log.receiverFinalFee, 0) ) "
+            + "FROM FeeTransactionLogEntity log "
+            + "WHERE (CAST(:dateFrom AS timestamp) IS NULL OR log.calculatedAt >= :dateFrom) "
+            + "AND (CAST(:dateTo AS timestamp ) IS NULL OR log.calculatedAt <= :dateTo) "
+            + "GROUP BY log.receiverFeeCurrency")
+    List<Object[]> sumReceiverFeesByCurrency(
+            @Param("dateFrom") LocalDateTime dateFrom,
+            @Param("dateTo") LocalDateTime dateTo
+    );
+
+    @Query("SELECT log.transactionType, AVG(COALESCE(log.senderFinalFee, 0) + COALESCE(log.receiverFinalFee, 0)) "
+            + "FROM FeeTransactionLogEntity log "
+            + "WHERE (CAST(:dateFrom AS timestamp) IS NULL OR log.calculatedAt >= :dateFrom) "
+            + "AND (CAST(:dateTo AS timestamp ) IS NULL OR log.calculatedAt <= :dateTo) "
+            + "GROUP BY log.transactionType")
+    List<Object[]> avgFeesByTransactionType (
+            @Param("dateFrom") LocalDateTime dateFrom,
+            @Param("dateTo") LocalDateTime dateTo
+    );
+}
 
