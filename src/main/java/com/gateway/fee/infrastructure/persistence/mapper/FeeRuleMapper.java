@@ -46,7 +46,7 @@ public class FeeRuleMapper {
     //ENTITY to DOMAIN (used when loading)
 
     public FeeRule toDomain(FeeRuleEntity entity) {
-        //NOTE: we are using find here because we dont want to throw an exception and we are wrapping the list to vavr using List.ofAkk
+        //we are using find here because we dont want to throw an exception and we are wrapping the list to vavr using List.ofAll
         //if the side is not found, we just return null
         //this is because we dont want to fail the whole transaction if one side is missing
         FeeSideDefinition senderFee = List.ofAll(entity.getSideDefinitions())
