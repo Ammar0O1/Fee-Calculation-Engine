@@ -150,4 +150,4 @@ Integration tests run against the Docker Compose PostgreSQL instance (not an in-
 
 ## Team
 
-Built by a team of three interns, with responsibilities rotating across assignments (schema/persistence, calculation engine, history/reporting/error handling).
+Built by a team of three interns, with responsibilities rotating across assignments (schema/persistence, calculation engine, history /error handling).
