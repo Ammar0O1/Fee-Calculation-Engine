@@ -93,7 +93,7 @@ public class FeeHistoryService {
 
         for (Object[] row : rows) {
             K key = (K) row[0];
-            BigDecimal value = (BigDecimal) row[1];
+            BigDecimal value = new BigDecimal(row[1].toString());
             map.put(key, value);
         }
 
