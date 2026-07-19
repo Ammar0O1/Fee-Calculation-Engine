@@ -35,13 +35,6 @@ public class UserSpecificFeeRuleController {
     }
 
     // READ all the rules that applies to this user
-    @GetMapping("/{userId}/effective")
-    public ResponseEntity<List<FeeRuleResponse>> getUserSpecificEffectiveRules(
-            @PathVariable String userId,
-            @RequestParam String userType) {
-        List<FeeRuleResponse> responses = feeRuleService.getEffectiveFeeSchedule(userId, userType);
-        return ResponseEntity.ok(responses);
-    }
 
     // UPDATE USER-SPECIFIC RULE
     @PutMapping("/{userId}/{ruleId}")

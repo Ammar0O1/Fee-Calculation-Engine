@@ -1,32 +1,112 @@
-package com.gateway.fee.application;
+package com.gateway.fee.api.service;
 
+import com.gateway.fee.api.dto.request.FeeCalculationRequest;
+import com.gateway.fee.api.dto.request.FeeEstimateRequest;
+import com.gateway.fee.api.dto.response.EstimateMode;
+import com.gateway.fee.api.dto.response.FeeCalculationResponse;
+import com.gateway.fee.api.dto.response.FeeEstimateResponse;
+import com.gateway.fee.api.dto.response.FeeRuleResponse;
+import com.gateway.fee.api.mapper.FeeCalculationResultMapper;
+import com.gateway.fee.api.mapper.FeeRuleApiMapper;
+import com.gateway.fee.application.FeeCalculator;
 import com.gateway.fee.domain.calculation.CalculationStrategyFactory;
 import com.gateway.fee.domain.calculation.FeeApplier;
 import com.gateway.fee.domain.calculation.FeeCalculationStrategy;
+import com.gateway.fee.domain.exception.NoMatchingRuleException;
 import com.gateway.fee.domain.model.*;
 import com.gateway.fee.domain.resolution.FeeRuleResolver;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
+import com.gateway.fee.infrastructure.persistence.entity.FeeRuleEntity;
+import com.gateway.fee.infrastructure.persistence.repository.FeeRuleRepository;
+import com.gateway.fee.infrastructure.storage.DatabaseFeeRuleRegistry;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+//feat: implement estimate endpoint with dual-mode calculation preview and rule details
+@Service
 @RequiredArgsConstructor
-@Getter
-public class FeeCalculator {
+public class FeeCalculationService {
 
+    // Dependencies
+    private final FeeCalculator feeCalculator;
+    private final FeeCalculationResultMapper mapper;
+    private final DatabaseFeeRuleRegistry feeRuleRegistry;
     private final FeeRuleResolver feeRuleResolver;
     private final CalculationStrategyFactory calculationStrategyFactory;
     private final FeeApplier feeApplier;
-    private final FeeTransactionLogService feeTransactionLogService;
-    // this method has no logic in it, its just using other private methods to do the calculation
-    public FeeCalculationResult calculate(Transaction transaction) {
+    private final FeeRuleRepository feeRuleRepository;
+    private final FeeRuleApiMapper  feeRuleApiMapper;
+    //Public endpoints
+
+    public FeeCalculationResponse calculate(FeeCalculationRequest request) {
+        Transaction transaction = Transaction.builder()
+                .transactionId(request.getTransactionId())
+                .amount(request.getAmount())
+                .sourceCurrency(request.getSourceCurrency())
+                .destinationCurrency(request.getDestinationCurrency())
+                .transactionType(request.getTransactionType())
+                .senderId(request.getSenderId())
+                .senderUserType(request.getSenderUserType())
+                .receiverId(request.getReceiverId())
+                .receiverUserType(request.getReceiverUserType())
+                .build();
+        FeeCalculationResult result = feeCalculator.calculate(transaction);
+        return mapper.toResponse(result);
+    }
+
+    public FeeEstimateResponse estimate(FeeEstimateRequest request) {
+
+        if (request.getAmount() != null) {
+            // MODE 1 — amount present
+            Transaction transaction = Transaction.builder()
+                    .transactionId(UUID.randomUUID().toString())
+                    .amount(request.getAmount())
+                    .sourceCurrency(request.getSourceCurrency())
+                    .destinationCurrency(request.getDestinationCurrency())
+                    .senderId(request.getUserId())
+                    .senderUserType(request.getUserType())
+                    .receiverId(request.getUserId())
+                    .receiverUserType(request.getUserType())
+                    .transactionType(request.getTransactionType())
+                    .build();
+            FeeCalculationResult result = calculateWithoutLogging(transaction);
+            FeeCalculationResponse mapped = mapper.toResponse(result);
+
+            return FeeEstimateResponse.builder()
+                    .mode(EstimateMode.CALCULATION)
+                    .calculation(mapped)
+                    .build();
+        } else {
+            FeeRule rule = feeRuleResolver.resolve(
+                    request.getUserId(),
+                    request.getUserType(),
+                    request.getTransactionType(),
+                    request.getSourceCurrency(),
+                    request.getDestinationCurrency()
+            );
+
+            FeeRuleEntity entity = feeRuleRepository.findById(rule.getRuleId())
+                    .orElseThrow(() -> new NoMatchingRuleException("No rule found for the given criteria"));
+
+            FeeRuleResponse ruleResponse = feeRuleApiMapper.toRuleResponse(entity);
+
+            return FeeEstimateResponse.builder()
+                    .mode(EstimateMode.RULE_DETAIL)
+                    .ruleDetails(ruleResponse)
+                    .build();
+        }
+    }
+
+    //  Private helpers no-logging calculation path for estimate
+
+    private FeeCalculationResult calculateWithoutLogging(Transaction transaction) {
         FeeSideResult senderResult = processSenderSide(transaction);
         FeeSideResult receiverResult = processReceiverSide(transaction);
 
-        FeeCalculationResult result = new FeeCalculationResult(
+        return new FeeCalculationResult(
                 transaction.getTransactionId(),
                 transaction.getAmount(),
                 transaction.getSourceCurrency(),
@@ -36,11 +116,8 @@ public class FeeCalculator {
                 receiverResult,
                 LocalDateTime.now()
         );
-        feeTransactionLogService.log(result); // so we can log the result of the calculation to db
-        return result;
     }
 
-    // this method is used to process and pass the values for the sender side of the fee calculation (calling resolver)
     private FeeSideResult processSenderSide(Transaction transaction) {
         FeeRule rule = feeRuleResolver.resolve(
                 transaction.getSenderId(),
@@ -61,11 +138,9 @@ public class FeeCalculator {
             );
         }
 
-        // Calculate the fee using the appropriate strategy
         FeeCalculationStrategy strategy = calculationStrategyFactory.getStrategy(senderFee.getCalculationMode());
         BigDecimal rawFee = strategy.calculate(transaction.getAmount(), senderFee);
 
-        // Apply rounding and caps
         FeeSideResult feeApplierResult = feeApplier.apply(rawFee, senderFee, transaction.getSourceCurrency());
 
         return new FeeSideResult(
@@ -84,7 +159,6 @@ public class FeeCalculator {
         );
     }
 
-    // this method is used to process and pass the values for the receiver side of the fee calculation (calling resolve)
     private FeeSideResult processReceiverSide(Transaction transaction) {
         FeeRule rule = feeRuleResolver.resolve(
                 transaction.getReceiverId(),
@@ -105,11 +179,9 @@ public class FeeCalculator {
             );
         }
 
-        // Calculate the fee using the correct strategy
         FeeCalculationStrategy strategy = calculationStrategyFactory.getStrategy(receiverFee.getCalculationMode());
         BigDecimal rawFee = strategy.calculate(transaction.getAmount(), receiverFee);
 
-        // Apply rounding and caps
         FeeSideResult feeApplierResult = feeApplier.apply(rawFee, receiverFee, transaction.getDestinationCurrency());
 
         return new FeeSideResult(
@@ -128,7 +200,6 @@ public class FeeCalculator {
         );
     }
 
-    // Builds a result for a waived fee side, only 4 parameters because the rest are constant for any waived transaction
     private FeeSideResult buildWaivedResult(String userId, UserType userType, UUID matchedRuleId, Currency currency) {
         return new FeeSideResult(
                 userId,
