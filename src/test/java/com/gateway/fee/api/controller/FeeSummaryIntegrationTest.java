@@ -60,7 +60,7 @@ class FeeSummaryIntegrationTest {
     }
     @Test
     void shouldReturnCorrectSummaryTotals() throws Exception {
-        // 1. SEED — call the helper 3 times
+        // call the helper 3 times
         seedTransaction(TransactionType.WIRE_TRANSFER,
                 UserType.CORPORATE, new BigDecimal("50"), Currency.USD, false,
                 UserType.PERSONAL,  new BigDecimal("10"), Currency.IQD, false);
