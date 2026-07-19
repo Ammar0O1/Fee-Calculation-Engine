@@ -2,13 +2,13 @@ package com.gateway.fee.api.dto.response;
 
 import com.gateway.fee.domain.model.Currency;
 import com.gateway.fee.domain.model.UserType;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class FeeSideResultResponse {
     private String userId;
     private UserType userType;
