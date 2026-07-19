@@ -3,6 +3,7 @@ package com.gateway.fee.api.mapper;
 import com.gateway.fee.api.dto.request.FeeSideDefinitionRequest;
 import com.gateway.fee.api.dto.request.TierBracketRequest;
 import com.gateway.fee.api.dto.response.FeeRuleResponse;
+import com.gateway.fee.api.dto.response.FeeScheduleEntryResponse;
 import com.gateway.fee.api.dto.response.FeeSideDefinitionResponse;
 import com.gateway.fee.api.dto.response.TierBracketResponse;
 import com.gateway.fee.domain.model.*;
@@ -110,5 +111,29 @@ public class FeeRuleApiMapper {
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );
+    }
+    //same as the method toRuleResponse but the return type is FeeScheduleEntryResponse which is used in FeeRuleQueryService
+    public FeeScheduleEntryResponse toScheduleEntry(FeeRuleEntity entity) {
+
+        FeeSideDefinitionResponse senderResponse = entity.getSideDefinitions().stream()
+                .filter(s -> "SENDER".equals(s.getSide()))
+                .findFirst()
+                .map(this::toSideResponse)
+                .orElse(null);
+
+        FeeSideDefinitionResponse receiverResponse = entity.getSideDefinitions().stream()
+                .filter(s -> "RECEIVER".equals(s.getSide()))
+                .findFirst()
+                .map(this::toSideResponse)
+                .orElse(null);
+
+        return FeeScheduleEntryResponse.builder()
+                .userType(entity.getUserType())
+                .transactionType(entity.getTransactionType())
+                .sourceCurrency(entity.getSourceCurrency())
+                .destinationCurrency(entity.getDestinationCurrency())
+                .senderFee(senderResponse)
+                .receiverFee(receiverResponse)
+                .build();
     }
 }
