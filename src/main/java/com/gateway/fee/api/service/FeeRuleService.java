@@ -351,17 +351,4 @@ public class FeeRuleService {
         feeRuleRepository.save(rule);
     }
 
-    // serving GET effective fee schedule for a user
-    public List<FeeRuleResponse> getEffectiveFeeSchedule(String userId, String userType) {
-        UserType type = feeRuleApiMapper.toUserType(userType);
-
-        List<FeeRuleEntity> custom = feeRuleRepository.findByUserIdAndActiveTrue(userId);
-        List<FeeRuleEntity> inheritedType = feeRuleRepository.findByUserIdIsNullAndUserTypeAndActiveTrue(type);
-        List<FeeRuleEntity> defaults = feeRuleRepository.findByUserIdIsNullAndUserTypeIsNullAndActiveTrue();
-
-        return Stream.of(custom, inheritedType, defaults)
-                .flatMap(List::stream)
-                .map(feeRuleApiMapper::toRuleResponse)
-                .toList();
-    }
 }
