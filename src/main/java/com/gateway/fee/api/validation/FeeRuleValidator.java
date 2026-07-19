@@ -2,6 +2,7 @@ package com.gateway.fee.api.validation;
 
 import com.gateway.fee.api.dto.request.FeeSideDefinitionRequest;
 import com.gateway.fee.api.dto.request.TierBracketRequest;
+import com.gateway.fee.domain.exception.InvalidRuleException;
 import com.gateway.fee.domain.model.*;
 import com.gateway.fee.infrastructure.persistence.entity.FeeRuleEntity;
 import com.gateway.fee.infrastructure.persistence.repository.FeeRuleRepository;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
+import com.gateway.fee.domain.exception.DuplicateRuleException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -31,8 +33,7 @@ public class FeeRuleValidator {
                 userId, userType, transactionType, src, dst
         );
         if (!exists.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Fee rule already exists for the given parameters");
-        }
+            throw new DuplicateRuleException("Fee rule already exists for the given parameters");        }
     }
     // same duplicate validation but this is for updating(dont want to check userId cuz its always matches)
     public void validateNotDuplicateForUpdate(UUID excludeRuleId, String userId, UserType userType,
@@ -40,15 +41,14 @@ public class FeeRuleValidator {
         List<FeeRuleEntity> exists = feeRuleRepository.findByDimensionsExcludingId(
                 excludeRuleId, userId, userType, transactionType, src, dst);
         if (!exists.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Another fee rule already exists with these dimensions");
-        }
+            throw new DuplicateRuleException("Another fee rule already exists with these dimensions");        }
     }
 
 
     // validating if at least one side is not waived
     private void validateAtLeastOneSide(FeeSideDefinitionRequest senderRequest, FeeSideDefinitionRequest receiverRequest) {
         if (senderRequest == null && receiverRequest == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "At least one of senderFee or receiverFee must be non-null");
+            throw new InvalidRuleException( "At least one of senderFee or receiverFee must be non-null");
         }
     }
 
@@ -61,17 +61,17 @@ public class FeeRuleValidator {
         switch (mode) {
             case PERCENTAGE -> {
                 if (side.getPercentage() == null) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Percentage must be provided for PERCENTAGE calculation mode");
+                    throw new InvalidRuleException( "Percentage must be provided for PERCENTAGE calculation mode");
                 }
             }
             case FLAT -> {
                 if (side.getFlatAmount() == null) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Flat amount must be provided for FLAT calculation mode");
+                    throw new InvalidRuleException( "Flat amount must be provided for FLAT calculation mode");
                 }
             }
             case TIERED_FLAT, TIERED_MARGINAL -> {
                 if (side.getTiers() == null || side.getTiers().isEmpty()) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tiers must be provided for TIERED_FLAT calculation mode");
+                    throw new InvalidRuleException( "Tiers must be provided for TIERED_FLAT calculation mode");
                 }
                 validateTiers(side.getTiers());
 
@@ -79,7 +79,7 @@ public class FeeRuleValidator {
 
             case HYBRID -> {
                 if (side.getFlatAmount() == null || side.getPercentage() == null) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both flatAmount and percentage must be provided for HYBRID calculation mode");
+                    throw new InvalidRuleException( "Both flatAmount and percentage must be provided for HYBRID calculation mode");
                 }
             }
         }
@@ -89,7 +89,7 @@ public class FeeRuleValidator {
     private void validateCaps(FeeSideDefinitionRequest side) {
         if (side.getMinCap() != null && side.getMaxCap() != null) {
             if (side.getMinCap().compareTo(side.getMaxCap()) > 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "minCap must be less than maxCap");
+                throw new InvalidRuleException( "minCap must be less than maxCap");
             }
         }
     }
@@ -99,19 +99,19 @@ public class FeeRuleValidator {
         // Per-bracket checks
         tiers.forEach(tier -> {
             if (tier.getFromAmount().compareTo(BigDecimal.ZERO) < 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "fromAmount must be >= 0");
+                throw new InvalidRuleException( "fromAmount must be >= 0");
             }
             if (tier.getRate().compareTo(BigDecimal.ZERO) < 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "rate must be >= 0");
+                throw new InvalidRuleException( "rate must be >= 0");
             }
             if (tier.getToAmount() != null && tier.getToAmount().compareTo(tier.getFromAmount()) <= 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "toAmount must be greater than fromAmount");
+                throw new InvalidRuleException( "toAmount must be greater than fromAmount");
             }
         });
 
         // First bracket must start at 0
         if (tiers.get(0).getFromAmount().compareTo(BigDecimal.ZERO) != 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "First tier must start at 0");
+            throw new InvalidRuleException( "First tier must start at 0");
         }
 
         // Cross-bracket checks: ordering, no gaps, only last has null toAmount
@@ -126,13 +126,13 @@ public class FeeRuleValidator {
 
             // non-last brackets must have a toAmount
             if (current.getToAmount() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Only the last tier may have a null toAmount");
+                throw new InvalidRuleException( "Only the last tier may have a null toAmount");
             }
 
             // next bracket's fromAmount must equal this bracket's toAmount (no gaps, sorted)
             TierBracketRequest next = tiers.get(i + 1);
             if (next.getFromAmount().compareTo(current.getToAmount()) != 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Tiers must be contiguous with no gaps or overlaps");
+                throw new InvalidRuleException( "Tiers must be contiguous with no gaps or overlaps");
             }
         }
     }
