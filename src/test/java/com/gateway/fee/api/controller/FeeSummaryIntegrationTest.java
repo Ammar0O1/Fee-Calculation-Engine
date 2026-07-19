@@ -36,7 +36,7 @@ class FeeSummaryIntegrationTest {
             UserType receiverType, BigDecimal receiverFee, Currency receiverCurr, boolean receiverWaived) {
 
         FeeTransactionLogEntity entity = FeeTransactionLogEntity.builder()
-                // --- dummy-but-required fields ---
+                // dummy but required fields
                 .transactionId("tx-test")
                 .transactionAmount(BigDecimal.TEN)
                 .sourceCurrency(Currency.USD)
@@ -44,7 +44,7 @@ class FeeSummaryIntegrationTest {
                 .senderUserId("sender-1")
                 .receiverUserId("receiver-1")
                 .calculatedAt(LocalDateTime.now())
-                // --- fields your test actually varies ---
+                //fields your test actually varies
                 .transactionType(type)
                 .senderUserType(senderType)
                 .senderFinalFee(senderFee)
@@ -60,7 +60,7 @@ class FeeSummaryIntegrationTest {
     }
     @Test
     void shouldReturnCorrectSummaryTotals() throws Exception {
-        // 1. SEED — call the helper 3 times (your three transactions)
+        // 1. SEED — call the helper 3 times
         seedTransaction(TransactionType.WIRE_TRANSFER,
                 UserType.CORPORATE, new BigDecimal("50"), Currency.USD, false,
                 UserType.PERSONAL,  new BigDecimal("10"), Currency.IQD, false);
@@ -73,7 +73,7 @@ class FeeSummaryIntegrationTest {
                 UserType.PERSONAL,new BigDecimal("20"),Currency.USD,false,
                 UserType.CORPORATE, null, Currency.IQD, true);
 
-        // 2. ACT + ASSERT — one chained MockMvc statement (no semicolons until the end)
+        // one chained MockMvc statement
         mockMvc.perform(get("/api/fees/history/summary"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalsByTransactionType.WIRE_TRANSFER").value(95))
@@ -88,7 +88,6 @@ class FeeSummaryIntegrationTest {
     }
     @BeforeEach  // clean the tables before each test
     //ps: this approach is only reliably for this assignment otherwise you have to use different approach
-
     void cleanUp() {
         repository.deleteAll();
     }
