@@ -2,15 +2,14 @@ package com.gateway.fee.api.dto.response;
 
 import com.gateway.fee.domain.model.Currency;
 import com.gateway.fee.domain.model.TransactionType;
-import com.gateway.fee.domain.model.UserType;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 
 @Getter
-@AllArgsConstructor
+@Builder
 public class FeeCalculationResponse {
     private String transactionId;
     private BigDecimal transactionAmount;
