@@ -5,15 +5,14 @@ import com.gateway.fee.api.dto.request.CreateFeeRuleRequest;
 import com.gateway.fee.api.dto.response.FeeRuleResponse;
 import com.gateway.fee.api.mapper.FeeRuleApiMapper;
 import com.gateway.fee.api.validation.FeeRuleValidator;
+import com.gateway.fee.domain.exception.RuleNotFoundException;
 import com.gateway.fee.domain.model.Currency;
 import com.gateway.fee.domain.model.TransactionType;
 import com.gateway.fee.domain.model.UserType;
 import com.gateway.fee.infrastructure.persistence.entity.FeeRuleEntity;
 import com.gateway.fee.infrastructure.persistence.repository.FeeRuleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public class FeeRuleService {
     public void deleteDefaultRule(UUID feeRuleId) {
         // finding the rule
         FeeRuleEntity rule = feeRuleRepository.findById(feeRuleId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fee rule not found with id: " + feeRuleId));
+                .orElseThrow(() -> new RuleNotFoundException("Fee rule not found with id: " + feeRuleId));
         rule.setActive(false); // soft deleting it (we will still have the row in database)
         feeRuleRepository.save(rule);
     }
@@ -108,8 +107,7 @@ public class FeeRuleService {
         feeRuleValidator.validateNotDuplicateForUpdate(feeRuleId,null,null, txType, srcCurrency, dstCurrency);
         // finding the rule
         FeeRuleEntity feeRuleEntity = feeRuleRepository.findById(feeRuleId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fee rule not found with id: " + feeRuleId));
-
+                .orElseThrow(() -> new RuleNotFoundException("Fee rule not found with id: " + feeRuleId));
 
         feeRuleEntity.setTransactionType(txType);
         feeRuleEntity.setDestinationCurrency(dstCurrency);
@@ -210,8 +208,7 @@ public class FeeRuleService {
         feeRuleValidator.validateNotDuplicateForUpdate(feeRuleId,null, userType, txType, srcCurrency, dstCurrency);
 
         FeeRuleEntity feeRuleEntity = feeRuleRepository.findById(feeRuleId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fee rule not found with id: " + feeRuleId));
-
+                .orElseThrow(() -> new RuleNotFoundException("Fee rule not found with id: " + feeRuleId));
         feeRuleEntity.setUserType(userType);
         feeRuleEntity.setTransactionType(txType);
         feeRuleEntity.setDestinationCurrency(dstCurrency);
@@ -241,8 +238,7 @@ public class FeeRuleService {
 
     public void deleteUserTypeRule(UUID feeRuleId) {
         FeeRuleEntity rule = feeRuleRepository.findById(feeRuleId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fee rule not found with id: " + feeRuleId));
-        rule.setActive(false); // soft deleting it (we will still have the row in database)
+                .orElseThrow(() -> new RuleNotFoundException("Fee rule not found with id: " + feeRuleId));        rule.setActive(false); // soft deleting it (we will still have the row in database)
         feeRuleRepository.save(rule);
     }
 
@@ -315,8 +311,7 @@ public class FeeRuleService {
 
         // creating Entity
         FeeRuleEntity feeRuleEntity = feeRuleRepository.findById(feeRuleId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fee rule not found with id: " + feeRuleId));
-
+                .orElseThrow(() -> new RuleNotFoundException("Fee rule not found with id: " + feeRuleId));
         feeRuleEntity.setUserId(userId);
         feeRuleEntity.setUserType(userType);
         feeRuleEntity.setTransactionType(txType);
@@ -346,8 +341,7 @@ public class FeeRuleService {
     // serving DELETE user-specific fee rules
     public void deleteUserSpecificRule(String userId, UUID feeRuleId) {
         FeeRuleEntity rule = feeRuleRepository.findById(feeRuleId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Fee rule not found with id: " + feeRuleId));
-        rule.setActive(false); // soft deleting it (we will still have the row in database)
+                .orElseThrow(() -> new RuleNotFoundException("Fee rule not found with id: " + feeRuleId));        rule.setActive(false); // soft deleting it (we will still have the row in database)
         feeRuleRepository.save(rule);
     }
 

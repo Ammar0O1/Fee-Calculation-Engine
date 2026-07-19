@@ -1,6 +1,7 @@
 package com.gateway.fee.api.error;
 
 import com.gateway.fee.domain.exception.DuplicateRuleException;
+import com.gateway.fee.domain.exception.InvalidRuleException;
 import com.gateway.fee.domain.exception.NoMatchingRuleException;
 import com.gateway.fee.domain.exception.RuleNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +38,13 @@ public class GlobalExceptionHandler {
 @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         ErrorResponse body = new ErrorResponse(400,"Bad Request", ex.getMessage(), LocalDateTime.now(),request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    // 400: invalid rule configuration (manual validation)
+    @ExceptionHandler(InvalidRuleException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidRuleException(InvalidRuleException ex, HttpServletRequest request) {
+        ErrorResponse body = new ErrorResponse(400, "Bad Request", ex.getMessage(), LocalDateTime.now(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 

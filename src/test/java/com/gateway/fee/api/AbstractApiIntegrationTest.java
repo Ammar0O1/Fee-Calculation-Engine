@@ -2,6 +2,7 @@ package com.gateway.fee.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gateway.fee.infrastructure.persistence.repository.FeeRuleRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,6 +33,10 @@ public abstract class AbstractApiIntegrationTest {
     }
     @BeforeEach
     void clearDatabase() {
+        feeRuleRepository.deleteAll();
+    }
+    @AfterEach
+    void cleanupAfter() {
         feeRuleRepository.deleteAll();
     }
 
