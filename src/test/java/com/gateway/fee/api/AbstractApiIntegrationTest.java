@@ -7,12 +7,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 
 public abstract class AbstractApiIntegrationTest {
     @Autowired
@@ -24,13 +26,7 @@ public abstract class AbstractApiIntegrationTest {
 
     // this class has almost same job as AbstractPostgresIntegrationTest, but that one only serves for DB layer, this one is for api layer.
 
-    @DynamicPropertySource
-    static void props(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () -> "jdbc:postgresql://localhost:5432/fee_engine");
-        registry.add("spring.datasource.username", () -> "Hardy");
-        registry.add("spring.datasource.password", () -> "1234");
-        registry.add("spring.flyway.enabled", () -> "true");
-    }
+
     @BeforeEach
     void clearDatabase() {
         feeRuleRepository.deleteAll();
