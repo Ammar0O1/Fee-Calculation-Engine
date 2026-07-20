@@ -1,0 +1,4 @@
+spring.datasource.url=jdbc:postgresql://localhost:5432/fee_engine
+spring.datasource.username=YOUR_DB_USER
+spring.datasource.password=YOUR_DB_PASSWORD
+spring.flyway.enabled=true
