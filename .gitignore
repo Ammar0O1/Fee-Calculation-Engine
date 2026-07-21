@@ -1,6 +1,6 @@
 ### Maven ###
 target/
-docker-compose.yml
+
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
