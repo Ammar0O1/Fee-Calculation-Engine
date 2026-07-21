@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.yourproject</groupId>
+    <groupId>com.gateway</groupId>
     <artifactId>fee-calculation-engine</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>fee-calculation-engine</name>
