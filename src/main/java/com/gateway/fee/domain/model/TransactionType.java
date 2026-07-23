@@ -1,0 +1,18 @@
+package com.gateway.fee.domain.model;
+
+public enum TransactionType {
+    WIRE_TRANSFER,
+    INTERNAL_TRANSFER,
+    CASH_WITHDRAWAL,
+    CASH_DEPOSIT,
+    PAYMENT,
+    REFUND,
+    DIRECT_DEBIT,
+    STANDING_ORDER,
+    CARD_PAYMENT,
+    ATM_WITHDRAWAL,
+    MOBILE_TOP_UP,
+    BILL_PAYMENT,
+    SALARY_PAYMENT,
+    MERCHANT_SETTLEMENT;
+}

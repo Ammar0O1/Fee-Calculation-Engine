@@ -1,0 +1,51 @@
+[
+  {
+    "ruleId": "00000000-0000-0000-0000-000000000001",
+    "userId": "USER-1",
+    "userType": "PERSONAL",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": "USD",
+    "destinationCurrency": "EUR",
+    "senderFee": {
+      "calculationMode": "HYBRID",
+      "flatAmount": 1.00,
+      "percentage": 0.5,
+      "minCap": 0.50,
+      "maxCap": 10.00
+    },
+    "receiverFee": {
+      "calculationMode": "TIERED_FLAT",
+      "tiers": [
+        {
+          "fromAmount": 0,
+          "toAmount": 100,
+          "rate": 1.00
+        },
+        {
+          "fromAmount": 100,
+          "toAmount": 1000,
+          "rate": 5.00
+        }
+      ]
+    },
+    "effectiveDate": "2023-01-01T00:00:00",
+    "active": true,
+    "description": "Test Rule 1"
+  },
+  {
+    "ruleId": "00000000-0000-0000-0000-000000000002",
+    "userId": null,
+    "userType": "CORPORATE",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": "EUR",
+    "destinationCurrency": "EUR",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "percentage": 1.0
+    },
+    "receiverFee": null,
+    "effectiveDate": "2023-02-01T00:00:00",
+    "active": false,
+    "description": "Test Rule 2"
+  }
+]

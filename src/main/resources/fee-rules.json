@@ -1,0 +1,153 @@
+[
+  {
+    "ruleId": "00000000-0000-0000-0000-000000000001",
+    "userId": null,
+    "userType": null,
+    "transactionType": null,
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Global default rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "FLAT",
+      "flatAmount": 1.00,
+      "percentage": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "00000000-0000-0000-0000-000000000002",
+    "userId": null,
+    "userType": "CORPORATE",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Corporate wire transfer rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "percentage": 0.005,
+      "flatAmount": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "00000000-0000-0000-0000-000000000003",
+    "userId": null,
+    "userType": "PERSONAL",
+    "transactionType": "INTERNAL_TRANSFER",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Personal internal transfer rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "FLAT",
+      "flatAmount": 1.00,
+      "percentage": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "00000000-0000-0000-0000-000000000004",
+    "userId": null,
+    "userType": "BUSINESS",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Business wire transfer rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "flatAmount": null,
+      "percentage": 0.01,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "00000000-0000-0000-0000-000000000005",
+    "userId": null,
+    "userType": "PERSONAL",
+    "transactionType": "PAYMENT",
+    "sourceCurrency": "USD",
+    "destinationCurrency": "IQD",
+    "active": true,
+    "description": "Personal USD to IQD payment rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "HYBRID",
+      "flatAmount": 2.00,
+      "percentage": 0.005,
+      "tiers": null,
+      "minCap": 3.00,
+      "maxCap": 20.00
+    },
+    "receiverFee": {
+      "calculationMode": "FLAT",
+      "flatAmount": 500,
+      "percentage": null,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    }
+  },
+  {
+    "ruleId": "00000000-0000-0000-0000-000000000006",
+    "userId": "user-123",
+    "userType": "CORPORATE",
+    "transactionType": "WIRE_TRANSFER",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "User specific corporate wire transfer rule",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "PERCENTAGE",
+      "flatAmount": null,
+      "percentage": 0.002,
+      "tiers": null,
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  },
+  {
+    "ruleId": "00000000-0000-0000-0000-000000000007",
+    "userId": null,
+    "userType": "BUSINESS_TERMINAL",
+    "transactionType": "PAYMENT",
+    "sourceCurrency": null,
+    "destinationCurrency": null,
+    "active": true,
+    "description": "Business terminal payment with marginal tiers",
+    "effectiveDate": "2024-01-01T00:00:00",
+    "senderFee": {
+      "calculationMode": "TIERED_MARGINAL",
+      "flatAmount": null,
+      "percentage": null,
+      "tiers": [
+        {"fromAmount": 0, "toAmount": 1000, "rate": 0.02},
+        {"fromAmount": 1000, "toAmount": 5000, "rate": 0.015},
+        {"fromAmount": 5000, "toAmount": null, "rate": 0.01}
+      ],
+      "minCap": null,
+      "maxCap": null
+    },
+    "receiverFee": null
+  }
+]
