@@ -23,6 +23,11 @@ public class FeeTransactionLogRepositoryTest extends AbstractPostgresIntegration
     @Autowired
     private TestEntityManager entityManager;
 
+    @org.junit.jupiter.api.BeforeEach
+    void setup() {
+        repository.deleteAll();
+    }
+
     @Test
     void saveAndRetrieveByTransactionId() {
         // Given
