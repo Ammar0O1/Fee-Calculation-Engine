@@ -1,6 +1,8 @@
 ### Maven ###
 target/
-docker-compose.yml
+application-test.properties
+
+.env
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
