@@ -1,5 +1,5 @@
 package com.gateway.fee.domain.calculation;
-// i'll fix formating later (Intern-B)
+
 
 import com.gateway.fee.domain.model.Currency;
 import com.gateway.fee.domain.model.FeeSideDefinition;
