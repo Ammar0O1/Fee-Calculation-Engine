@@ -17,7 +17,6 @@ import com.gateway.fee.domain.model.*;
 import com.gateway.fee.domain.resolution.FeeRuleResolver;
 import com.gateway.fee.infrastructure.persistence.entity.FeeRuleEntity;
 import com.gateway.fee.infrastructure.persistence.repository.FeeRuleRepository;
-import com.gateway.fee.infrastructure.storage.DatabaseFeeRuleRegistry;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -33,7 +32,6 @@ public class FeeCalculationService {
     // Dependencies
     private final FeeCalculator feeCalculator;
     private final FeeCalculationResultMapper mapper;
-    private final DatabaseFeeRuleRegistry feeRuleRegistry;
     private final FeeRuleResolver feeRuleResolver;
     private final CalculationStrategyFactory calculationStrategyFactory;
     private final FeeApplier feeApplier;
@@ -60,7 +58,8 @@ public class FeeCalculationService {
     public FeeEstimateResponse estimate(FeeEstimateRequest request) {
 
         if (request.getAmount() != null) {
-            // MODE 1 — amount present
+            // MODE 1  amount present
+            // we will calculate the fee (without logging normal calculation but no logging)
             Transaction transaction = Transaction.builder()
                     .transactionId(UUID.randomUUID().toString())
                     .amount(request.getAmount())
@@ -80,6 +79,8 @@ public class FeeCalculationService {
                     .calculation(mapped)
                     .build();
         } else {
+            // MODE 2  amount not present
+            // we will return the rule details no calculation
             FeeRule rule = feeRuleResolver.resolve(
                     request.getUserId(),
                     request.getUserType(),

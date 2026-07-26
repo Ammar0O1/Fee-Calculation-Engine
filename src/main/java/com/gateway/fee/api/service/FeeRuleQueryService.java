@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class FeeRuleQueryService {
     private final FeeRuleRepository feeRuleRepository;
     private final FeeRuleApiMapper mapper;
-    //feat: add dimension filtering to fee schedule endpoint(instead of returning all of the tables we filter and send back what user wants
+  //feat:  Take every active rule, throw away anything that doesn't match what the caller asked to filter by, convert what's left into table rows, return the list.
     public List<FeeScheduleEntryResponse> schedule(UserType userType, TransactionType transactionType, Currency sourceCurrency, Currency destinationCurrency) {
         return feeRuleRepository.findByActiveTrue().stream()
                 .filter(e -> userType == null || userType.equals(e.getUserType()))

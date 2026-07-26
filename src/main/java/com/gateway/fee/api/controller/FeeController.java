@@ -19,9 +19,9 @@ import java.util.List;
 //feat: add FeeController exposing calculation-facing REST endpoints
 //
 //Wires the four calculation-facing endpoints to their services:
-//- POST /api/fees/calculate    — real transaction, calculates + logs, returns breakdown
-//- POST /api/fees/estimate     — preview (never logged), dual-mode calc or rule details
-//- GET  /api/fees/schedule     — full fee table with optional dimension filters
+//- POST /api/fees/calculate— real transaction, calculates + logs, returns breakdown
+//- POST /api/fees/estimate— preview (never logged), dual-mode calc or rule details
+//- GET  /api/fees/schedule— full fee table with optional dimension filters
 //- GET  /api/fees/rules/users/{userId}/effective — three-tier CUSTOM/INHERITED/DEFAULT rules
 //
 //Controller stays thin: validates input, delegates to FeeCalculationService and
