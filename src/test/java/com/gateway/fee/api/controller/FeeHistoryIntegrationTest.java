@@ -34,7 +34,7 @@ class FeeHistoryIntegrationTest {
         repository.deleteAll();
     }
 
-    // seed one transaction, varying only the user IDs and type (what this test cares about)
+    // seed one transaction, varying only the user IDs and type (what this test cares about) -- helper
     private void seedWithUsers(String senderUserId, String receiverUserId, TransactionType type) {
         FeeTransactionLogEntity entity = FeeTransactionLogEntity.builder()
                 .transactionId("tx-" + senderUserId)
