@@ -44,7 +44,7 @@ class FeeSummaryIntegrationTest {
                 .senderUserId("sender-1")
                 .receiverUserId("receiver-1")
                 .calculatedAt(LocalDateTime.now())
-                //fields your test actually varies
+                
                 .transactionType(type)
                 .senderUserType(senderType)
                 .senderFinalFee(senderFee)
